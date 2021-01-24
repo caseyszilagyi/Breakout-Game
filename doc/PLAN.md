@@ -18,7 +18,7 @@ I would definitely like to attempt to make some type of movement, whether it be 
 - Warp from one side of the screen to the other.
 
 - Change the direction of the ball depending on where on the paddle the ball hits,
-this gives the user some control over the direction, otherwise it is random.
+this gives the user some control over the direction, otherwise they have no control over what happens.
 
 ## Block Ideas
 - Blocks that drop powerups is the main idea as to how I would incorporate powerups into the game
@@ -26,9 +26,9 @@ this gives the user some control over the direction, otherwise it is random.
 - I also think I will add blocks that take multiple hits to be destroyed, because it adds to the difficulty of the game substantially
 
 - I would also like to have blocks with power ups built in, that way the user can plan their gameplay a little more.
-The blocks would show what powerup they had.
+The blocks would show what powerup they have.
 
-- Blocks that when destroyed, destroy all the blocks in the same column/row (not sure which)
+- Blocks that when destroyed, destroy all the blocks in the same column/row (not sure which, maybe both? Depends on the level)
 
 ## Power-up Ideas
 - An upgrade/downgrade paddle size powerup.
@@ -99,4 +99,21 @@ rccccc
 
 
 ## Class Ideas
-
+- An overarching "game" class. This will be the class that will be run to actually play the game.
+It will set up the environment, and have the game loop.
+  A useful method for this class would be a "makelevel" method, which has submethods that instantiate all of the objects that are in the level
+  
+- A "level" class that essentially contains all of the information for the current level.
+So it will have all of the bricks, the ball, the paddle.
+  A useful method for this class will be a "remove brick" method, which gets rid of a brick when it has no health left
+  
+- A "brick" class that has all of the information about each brick.
+So essentially the amount of hits it can take, if it has a built in power up, the chances that it drops a power up, etc.
+  Could potentially have different brick classes for different types of brick.
+  A useful method would be a "reduce health" method, which lowers the amount of hits the brick can take
+  
+- A "ball" class that has all of the details about the ball.
+Also useful for if there is a multiball powerup
+  A useful method would be a "changespeed" method, which alters the speed of the ball
+  
+-
