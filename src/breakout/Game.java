@@ -117,7 +117,7 @@ public abstract class Game {
         // check other sprite's collisions
         spriteManager.resetCollisionsToCheck();
         // check each sprite against other sprite objects.
-        //Had to change type from sprite to object
+        // had to change type from sprite to object
         for (Object spriteA:spriteManager.getCollisionsToCheck()){
             for (Object spriteB:spriteManager.getAllSprites()){
                 if (handleCollision((Sprite) spriteA, (Sprite) spriteB)) {
