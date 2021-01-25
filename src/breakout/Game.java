@@ -11,7 +11,7 @@ import javafx.stage.Stage;
 import javafx.util.Duration;
 import javafx.scene.shape.Rectangle;
 
-public abstract class BreakoutGame {
+public abstract class Game {
     /** The JavaFX Scene as the game surface */
     private Scene gameSurface;
     /** All nodes to be displayed in the game window. */
@@ -36,7 +36,7 @@ public abstract class BreakoutGame {
      * @param fps - Frames per second.
      * @param title - Title of the application window.
      */
-    public BreakoutGame(final int fps, final String title) {
+    public Game(final int fps, final String title) {
         framesPerSecond = fps;
         windowTitle = title;
         // create and set timeline for the game loop
@@ -179,7 +179,7 @@ public abstract class BreakoutGame {
      * representing the game loop.
      */
     protected static void setGameLoop(Timeline gameLoop) {
-        BreakoutGame.gameLoop = gameLoop;
+        Game.gameLoop = gameLoop;
     }
 
     /**
