@@ -66,14 +66,17 @@ public abstract class Game {
 
 
         // sets the game world's game loop (Timeline)
-        setGameLoop(new Timeline(oneFrame));
+        Timeline timeline = new Timeline(oneFrame);
+        // allows for enough cycles for an hour of gameplay
+        timeline.setCycleCount(216000);
+        setGameLoop(timeline);
     }
 
     /**
      * Initialize the game world by update the JavaFX Stage.
      * @param primaryStage
      */
-    public abstract void initialize(final Stage primaryStage);
+    public abstract void start(final Stage primaryStage);
 
     /**Kicks off (plays) the Timeline objects containing one key frame
      * that simply runs indefinitely with each frame invoking a method
