@@ -99,21 +99,24 @@ rccccc
 
 
 ## Class Ideas
-- An overarching "game" class. This will be the class that will be run to actually play the game.
-It will set up the environment, and have the game loop.
-  A useful method for this class would be a "makelevel" method, which has submethods that instantiate all of the objects that are in the level
+- "Game" - This class will be abstract and therefore will have to be extended to create a specific game.
+Will essentially be the engine with which to run games, and will handle the game loop and deal with collisions and different objects involved in the game.
+  One useful method will be a "CheckCollisions" method, which will see if there are any objects that are colliding in the current frame
   
-- A "level" class that essentially contains all of the information for the current level.
-So it will have all of the bricks, the ball, the paddle.
-  A useful method for this class will be a "remove brick" method, which gets rid of a brick when it has no health left
+- "SpriteManager" - This class will be the manager that deals with all of the different objects and their collisions.
+One useful method will be the a "RemoveSprites" method, which removes all sprites (such as bricks) that are no longer needed
   
-- A "brick" class that has all of the information about each brick.
-So essentially the amount of hits it can take, if it has a built in power up, the chances that it drops a power up, etc.
-  Could potentially have different brick classes for different types of brick.
-  A useful method would be a "reduce health" method, which lowers the amount of hits the brick can take
+- "Sprite" - This class will be abstract, and will simply represent an object in the game.
+One useful method will be the "collide" method, which checks if a different object is in contact with the current one.
   
-- A "ball" class that has all of the details about the ball.
-Also useful for if there is a multiball powerup
-  A useful method would be a "changespeed" method, which alters the speed of the ball
+- "BreakoutGame" - This class will extend the Game class, and will simply add things that make the game actually function.
+The game class is designed as the engine, but the BreakoutGame class will deal with everything that makes it specific to breakout.
+  One useful method will be the "Initialize Level" method, which will create the bricks, ball, and paddle.
   
--
+- "BreakoutDriver" - This class will essentially make an instance of a BreakoutGame, and then call it.
+The only useful method will be the "start" method that calls BreakoutGame methods.
+  
+- "Brick" - Will implement the Sprite class, and make a brick object that can be destroyed.
+One useful method will be the "lowerHealth" method, which will reduce the health of the brick by 1"
+
+  
