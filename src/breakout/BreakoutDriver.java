@@ -9,6 +9,7 @@ import javafx.stage.Stage;
  */
 public class BreakoutDriver extends Application {
 
+    // BreakoutGame instance used to play
     BreakoutGame breakoutGame = new BreakoutGame(60, "My Breakout Game");
     /**
      * @param args the command line arguments
@@ -17,10 +18,15 @@ public class BreakoutDriver extends Application {
         launch(args);
     }
 
+    /**
+     * Initializes the game world by updating the primaryStage. We simply construct the stage of our
+     * BreakoutGame object, begin the game loop, and show the stage.
+     * @param primaryStage The stage constructed by the platform to be updated
+     */
     @Override
     public void start(Stage primaryStage) {
         // setup title, scene, stats, controls, and actors.
-        breakoutGame.initialize(primaryStage);
+        breakoutGame.start(primaryStage);
 
         // kick off the game loop
         breakoutGame.beginGameLoop();
