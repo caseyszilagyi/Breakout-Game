@@ -11,11 +11,12 @@ public class Ball extends Sprite{
         node = ball;
     }
 
+    @Override
     public void update(){
         node.setTranslateX(node.getTranslateX() + vX);
         node.setTranslateY(node.getTranslateY() + vY);
 
-        //Set wall bouncing
+        //Need to set wall bouncing
     }
 
     //Need to add separate collide methods for the paddle and the bricks.
