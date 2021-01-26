@@ -2,7 +2,7 @@ package breakout;
 
 import javafx.scene.shape.Rectangle;
 
-public class RectangleSprite extends Sprite{
+public abstract class RectangleSprite extends Sprite{
 
     /**
      * The rectangle class represents any sprite that is rectangular, or has a rectuangular hitbox.
