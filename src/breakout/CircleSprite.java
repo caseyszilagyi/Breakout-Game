@@ -4,11 +4,8 @@ import javafx.scene.shape.Circle;
 
 public abstract class CircleSprite extends Sprite{
 
-    protected int xDirection = 1;
-    protected int yDirection = 1;
-
     /**
-     * The circle class represents any sprite that is circular.
+     * The circle class represents any sprite that is circular, or has a circular hitbox.
      * @param xPos Starting x position of the circle
      * @param yPos Starting y position of the circle
      * @param radius Starting radius of the circle
@@ -28,13 +25,17 @@ public abstract class CircleSprite extends Sprite{
      */
     @Override
     public void update(){
-        node.setTranslateX(node.getTranslateX() + vX * xDirection);
-        node.setTranslateY(node.getTranslateY() + vY * yDirection);
+        node.setTranslateX(node.getTranslateX() + vX);
+        node.setTranslateY(node.getTranslateY() + vY);
     }
 
+    /**
+     * Did this sprite collide into the other sprite?
+     * @param other - The other sprite.
+     * @return True if it did
+     */
     public boolean collide(Sprite other){
         return false;
     }
 
-    //Need to add separate collide methods for the paddle and the bricks.
 }
