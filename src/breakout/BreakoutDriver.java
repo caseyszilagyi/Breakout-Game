@@ -25,10 +25,10 @@ public class BreakoutDriver extends Application {
      */
     @Override
     public void start(Stage primaryStage) {
-        // setup title, scene, stats, controls, and actors.
+        // setup title, scene, stats, controls, and objects.
         breakoutGame.start(primaryStage);
 
-        // kick off the game loop
+        // start game loop
         breakoutGame.beginGameLoop();
 
         // display window
