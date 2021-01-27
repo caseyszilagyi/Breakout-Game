@@ -18,7 +18,7 @@ public abstract class GameObject {
     /** Velocity vector y direction */
     public double YVelocity = 0;
 
-    /** Does this sprite still exist */
+    /** Does this GameObject exist */
     public boolean isDead = false;
 
     /**
