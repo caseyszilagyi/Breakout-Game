@@ -5,7 +5,7 @@ import javafx.scene.shape.Rectangle;
 public abstract class RectangleGameObject extends GameObject{
 
     /**
-     * The rectangle class represents any sprite that is rectangular, or has a rectuangular hitbox.
+     * The rectangle class represents any GameObject that is rectangular, or has a rectuangular hitbox.
      * Also includes the borders.
      * @param startX Starting x position of the rectangle
      * @param startY Starting y position of the rectangle
@@ -28,12 +28,12 @@ public abstract class RectangleGameObject extends GameObject{
     }
 
     /**
-     * Did this sprite collide into the other sprite?
-     * @param other - The other sprite.
+     * Did this GameObject collide into the other one
+     * @param other - The other object.
      * @return True if it did
      */
     public boolean collide(GameObject other){
-        return node.getBoundsInParent().intersects(other.node.getBoundsInParent());
+        return super.collide(other);
     }
 
 }
