@@ -5,7 +5,7 @@ import javafx.scene.shape.Circle;
 public abstract class CircleGameObject extends GameObject{
 
     /**
-     * The circle class represents any sprite that is circular, or has a circular hitbox.
+     * The circle class represents any GameObject that is circular, or has a circular hitbox.
      * @param xPos Starting x position of the circle
      * @param yPos Starting y position of the circle
      * @param radius Starting radius of the circle
@@ -31,7 +31,7 @@ public abstract class CircleGameObject extends GameObject{
 
     /**
      * Simply returns the super call of collide, which uses the intersect method and the bounds of the two nodes
-     * @param other - The other sprite.
+     * @param other - The other GameObject.
      * @return True if it did
      */
     public boolean collide(GameObject other){
