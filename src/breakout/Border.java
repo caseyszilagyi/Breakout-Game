@@ -2,7 +2,7 @@ package breakout;
 
 import javafx.scene.shape.Rectangle;
 
-public class Border extends RectangleSprite{
+public class Border extends RectangleGameObject{
 
     /**
      * Border class to outline the playing board. This makes it easier to deal with ball/powerup collisions with the
