@@ -3,11 +3,8 @@ package breakout;
 import java.util.*;
 
 /**
- * Sprite manager is responsible for holding all sprite objects, and cleaning up
- * sprite objects to be removed. All collections are used by the JavaFX
- * application thread. During each cycle (animation frame) sprite management
- * occurs. This assists the user of the API to not have to create lists to
- * later be garbage collected. Should provide some performance gain.
+ * Object manager holds all the objects in the game for collision detection
+ * and removes/adds new objects
  * @author cdea
  */
 
