@@ -4,10 +4,13 @@ import breakout.Game;
 import breakout.GameObject;
 import java.util.Random;
 import javafx.animation.Timeline;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.control.Label;
+import javafx.scene.input.KeyCode;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
@@ -30,6 +33,14 @@ public class BreakoutGame extends Game{
     private final int BALL_XVELOCITY = 5;
     private final int BALL_YVELOCITY = 1;
 
+    //Paddle Initialization
+    private final int PADDLE_XINITIAL = 450;
+    private final int PADDLE_YINITIAL = 790;
+    private final int PADDLE_WIDTH = 100;
+    private final int PADDLE_HEIGHT = 10;
+    private final int PADDLE_SPEED = 3;
+    public Paddle paddle;
+
     /**
      * This constructor calls the super constructor in the "Game" class.
      * @param fps The frames per second that the game will run at
@@ -51,8 +62,7 @@ public class BreakoutGame extends Game{
         setGameSurface(new Scene(getNodes(), GAME_WIDTH, GAME_HEIGHT));
         primaryStage.setScene(getGameSurface());
 
-        makeGameBorder();
-        makeBallAndPaddle();
+        makeGameComponents();
 
     }
 
@@ -77,6 +87,52 @@ public class BreakoutGame extends Game{
     }
 
     /**
+     * Method to make all of the game components
+     */
+    public void makeGameComponents(){
+        makeGameBorder();
+        makeBall();
+        makePaddle();
+    }
+
+
+    public void makePaddle(){
+        paddle = new Paddle(PADDLE_XINITIAL, PADDLE_YINITIAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED);
+        // add to all objects in play
+        getObjectManager().addObjects(paddle);
+        // add node to group of nodes for graphics
+        getNodes().getChildren().add(0, paddle.node);
+
+        //Makes EventHandler that deals with input from left/right keys to move paddle;
+        EventHandler paddleMove = new EventHandler(){
+            @Override
+            public void handle(Event event) {
+                if(event instanceof KeyEvent){
+                    keyPressResponse((KeyEvent) event);
+                }
+            }
+        };
+
+        //Adds event handler to our game
+        getGameSurface().setOnKeyPressed(paddleMove);
+
+
+    }
+
+    /**
+     * Updates the paddle when the right/left key is pressed
+     * @param event The key that is pressed
+     */
+    public void keyPressResponse(KeyEvent event){
+        if(event.getCode() == KeyCode.LEFT){
+            paddle.moveLeft();
+        }
+        else if(event.getCode() == KeyCode.RIGHT){
+            paddle.moveRight();
+        }
+    }
+
+    /**
      * Makes the game border so that collision with the edge is easier. The border is just a GameObject
      * so that the game engine can deal with these collisioins as they do every other collision.
      */
@@ -88,35 +144,25 @@ public class BreakoutGame extends Game{
 
         //Adding the borders to necessary groups
         for(int i = 0; i<borders.size(); i++){
-            // add to all  GameObjects in play
+            // add to all objects in play
             getObjectManager().addObjects(borders.get(i));
-            // add GameObjects
+            // add node to group of nodes for graphics
             getNodes().getChildren().add(0, borders.get(i).node);
         }
     }
 
     /**
-     * Creating the ball and paddle that the game will be played with.
-     */
-    public void makeBallAndPaddle(){
-        makeBall(BALL_XINITIAL, BALL_YINITIAL, BALL_RADIUS, BALL_XVELOCITY, BALL_YVELOCITY);
-    }
-
-    /**
      * Initializes the ball object
-     * @param xPos Starting x position of the ball
-     * @param yPos Starting y position of the ball
-     * @param radius Starting radius of the ball
-     * @param xVel Starting x velocity of the ball
-     * @param yVel Starting y velocity of the ball
      */
-    public void makeBall(int xPos, int yPos, int radius, int xVel, int yVel){
-        Ball ball = new Ball(xPos, yPos, radius, xVel, yVel);
+    public void makeBall(){
+        Ball ball = new Ball(BALL_XINITIAL, BALL_YINITIAL, BALL_RADIUS, BALL_XVELOCITY, BALL_YVELOCITY);
         // add to all objects in play
         getObjectManager().addObjects(ball);
         // add node to group of nodes for graphics
         getNodes().getChildren().add(0, ball.node);
     }
+
+
 
 
 }
