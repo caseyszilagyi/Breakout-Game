@@ -52,9 +52,9 @@ public class Ball extends CircleGameObject{
 
     public boolean checkRightWallCollision(GameObject other){
         Bounds currentBounds = node.getBoundsInParent();
-        Bounds otherBounds = node.getBoundsInParent();
+        Bounds otherBounds = other.node.getBoundsInParent();
         //To see if the right wall is between the left and right edges of the ball
-        if(currentBounds.getMaxX() > otherBounds.getMinX() && currentBounds.getMinX() < otherBounds.getMaxX()) {
+        if(currentBounds.getMaxX() > otherBounds.getMaxX() && currentBounds.getMinX() < otherBounds.getMaxX()) {
             return true;
         }
         return false;
@@ -62,9 +62,9 @@ public class Ball extends CircleGameObject{
 
     public boolean checkLeftWallCollision(GameObject other){
         Bounds currentBounds = node.getBoundsInParent();
-        Bounds otherBounds = node.getBoundsInParent();
+        Bounds otherBounds = other.node.getBoundsInParent();
         //To see if the right wall is between the left and right edges of the ball
-        if(currentBounds.getMaxX() > otherBounds.getMinX() && currentBounds.getMinX() < otherBounds.getMaxX()) {
+        if(currentBounds.getMaxX() > otherBounds.getMinX() && currentBounds.getMinX() < otherBounds.getMinX()) {
             return true;
         }
         return false;
