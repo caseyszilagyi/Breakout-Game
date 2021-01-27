@@ -1,235 +1,154 @@
 package breakout;
 
-import javafx.animation.Animation;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
-import javafx.scene.Group;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
 import javafx.util.Duration;
-import javafx.scene.shape.Rectangle;
+import javafx.scene.Scene;
+import javafx.scene.Node;
+import javafx.scene.Group;
+import javafx.stage.Stage;
 
-public abstract class Game {
-    /** The JavaFX Scene as the game surface */
+public abstract class Game{
+    /** The Scene that the game is played on */
     private Scene gameSurface;
-    /** All nodes to be displayed in the game window. */
-    private Group sceneNodes;
-    /** The game loop using JavaFX's <code>Timeline</code> API.*/
-    private static Timeline gameLoop;
+    /** All the nodes to be displayed */
+    private Group allNodes;
+    /** The GameLoop (keeps running) */
+    private Timeline gameLoop;
 
-    /** Number of frames per second. */
-    private final int framesPerSecond;
+    /** Frames per second */
+    private final int FRAMES_PER_SECOND;
+    /** Title */
+    private final String WINDOW_TITLE;
 
-    /** Title in the application window.*/
-    private final String windowTitle;
-
-    /**
-     * The sprite manager.
-     */
-    private final SpriteManager spriteManager = new SpriteManager();
+    /** Object Manager */
+    private final ObjectManager objectManager = new ObjectManager();
 
     /**
-     * Constructor that is called by the derived class. This will
-     * set the frames per second, title, and setup the game loop.
-     * @param fps - Frames per second.
-     * @param title - Title of the application window.
+     * Initializes the game. Simply sets the frames per second and the window title,
+     * and then makes the game loop in a separate function
+     * @param fps The frames per second of the game
+     * @param windowTitle The title that we want the window to have
      */
-    public Game(final int fps, final String title) {
-        framesPerSecond = fps;
-        windowTitle = title;
-        // create and set timeline for the game loop
-        buildAndSetGameLoop();
+    public Game(int fps, String windowTitle){
+        FRAMES_PER_SECOND = fps;
+        WINDOW_TITLE = windowTitle;
+        makeGameLoop();
     }
 
-    /**
-     * Builds and sets the game loop ready to be started.
-     */
-    protected final void buildAndSetGameLoop() {
 
-        final Duration oneFrameAmt = Duration.millis(1000/getFramesPerSecond());
+    public void makeGameLoop(){
+        final Duration oneFrameAmt = Duration.millis(1000/getFPS());
         EventHandler handle = event -> {
-
-            // update actors
-            updateSprites();
-
-            // check for collision
+            //Moves all of our objects
+            updateAllObjects();
+            //Checks for collisions
             checkCollisions();
-
-            // removed dead things
-            cleanupSprites();
-
-        }; // oneFrame
-
+            //Gets rid of objects that are no longer alive
+            cleanupDeadObjects();
+        };
+        //Setting the keyframe with a duration and our event handler
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt, handle);
 
-
-        // sets the game world's game loop (Timeline)
+        //Makes the timeline
         Timeline timeline = new Timeline(oneFrame);
         // allows for enough cycles for an hour of gameplay
         timeline.setCycleCount(216000);
         setGameLoop(timeline);
     }
 
-    /**
-     * Initialize the game world by update the JavaFX Stage.
-     * @param primaryStage
-     */
+    /** Initializes the game */
     public abstract void start(final Stage primaryStage);
 
-    /**Kicks off (plays) the Timeline objects containing one key frame
-     * that simply runs indefinitely with each frame invoking a method
-     * to update sprite objects, check for collisions, and cleanup sprite
-     * objects.
-     *
-     */
-    public void beginGameLoop() {
-        getGameLoop().play();
+
+    public void beginGameLoop(){
+        gameLoop.play();
     }
 
-    /**
-     * Updates each game sprite in the game world. This method will
-     * loop through each sprite and passing it to the handleUpdate()
-     * method. The derived class should override handleUpdate() method.
-     *
-     */
-    protected void updateSprites() {
-        for (Object sprite:spriteManager.getAllSprites()){
-            handleUpdate((Sprite) sprite);
+    //The following are parts of the game loop. These methods get called every time we update the frame
+
+    /** Cales the udpateObject method for each object */
+    public void updateAllObjects(){
+        for(Object gameObject:objectManager.getObjects()){
+            updateObject((GameObject) gameObject);
         }
     }
-
-    /** Updates the sprite object's information to position on the game surface.
-     * @param sprite - The sprite to update.
-     */
-    protected void handleUpdate(Sprite sprite) {
+    /** Update method called for each object. Calls the update method within the specific object class */
+    public void updateObject(GameObject gameObject){
+        gameObject.update();
     }
 
-    /**
-     * Checks each game sprite in the game world to determine a collision
-     * occurred. The method will loop through each sprite and
-     * passing it to the handleCollision()
-     * method. The derived class should override handleCollision() method.
-     *
-     */
-    protected void checkCollisions() {
-        // check other sprite's collisions
-        spriteManager.resetCollisionsToCheck();
-        // check each sprite against other sprite objects.
-        // had to change type from sprite to object
-        for (Object spriteA:spriteManager.getCollisionsToCheck()){
-            for (Object spriteB:spriteManager.getAllSprites()){
-                if (handleCollision((Sprite) spriteA, (Sprite) spriteB)) {
-                    // The break helps optimize the collisions
-                    //  The break statement means one object only hits another
-                    // object as opposed to one hitting many objects.
-                    // To be more accurate comment out the break statement.
+    /** Checks if any 2 objects collide. If they do, we stop checking for the current item */
+    public void checkCollisions(){
+        //Reset our list of collisions to check
+        objectManager.resetCollisionsToCheck();
+        for (Object gameObjectA:objectManager.getCollisionsToCheck()){
+            for (Object gameObjectB:objectManager.getObjects()){
+                if (gameObjectA != gameObjectB && collide((GameObject) gameObjectA, (GameObject) gameObjectB) ) {
+                    //Break once a collision is detected. GameObject therefore can't collide with more than 1 object
                     break;
                 }
             }
         }
     }
 
-    /**
-     * When two objects collide this method can handle the passed in sprite
-     * objects. By default it returns false, meaning the objects do not
-     * collide.
-     * @param spriteA - called from checkCollision() method to be compared.
-     * @param spriteB - called from checkCollision() method to be compared.
-     * @return boolean True if the objects collided, otherwise false.
-     */
-    protected boolean handleCollision(Sprite spriteA, Sprite spriteB) {
-        return false;
+    /** Calls the collide method contained in the GameObject class */
+    public boolean collide(GameObject A, GameObject B){
+        return A.collide(B);
     }
 
-    /**
-     * Sprites to be cleaned up.
-     */
-    protected void cleanupSprites() {
-        spriteManager.cleanupSprites();
+    /** Calls the cleanup method in objectmanager, which removes objects that are no longer needed */
+    public void cleanupDeadObjects(){
+        objectManager.cleanUp();
     }
 
-    /**
-     * Returns the frames per second.
-     * @return int The frames per second.
-     */
-    protected int getFramesPerSecond() {
-        return framesPerSecond;
+
+    //Below are all of the getters/setters of the class variables
+
+    /** Gets the Window title */
+    public String getWindowTitle(){
+        return WINDOW_TITLE;
     }
 
-    /**
-     * Returns the game's window title.
-     * @return String The game's window title.
-     */
-    public String getWindowTitle() {
-        return windowTitle;
+    /** Gets the frames per second */
+    public int getFPS(){
+        return FRAMES_PER_SECOND;
     }
 
-    /**
-     * The game loop (Timeline) which is used to update, check collisions, and
-     * cleanup sprite objects at every interval (fps).
-     * @return Timeline An animation running indefinitely representing the game
-     * loop.
-     */
-    protected static Timeline getGameLoop() {
-        return gameLoop;
+    /** Gets the object manager, which deals with collisions and object cleanup */
+    public ObjectManager getObjectManager(){
+        return objectManager;
     }
 
-    /**
-     * The sets the current game loop for this game world.
-     * @param gameLoop Timeline object of an animation running indefinitely
-     * representing the game loop.
-     */
-    protected static void setGameLoop(Timeline gameLoop) {
-        Game.gameLoop = gameLoop;
+    /** Sets the scene that is used to play the game on */
+    public void setGameSurface(Scene userSurface){
+        gameSurface = userSurface;
     }
 
-    /**
-     * Returns the sprite manager containing the sprite objects to
-     * manipulate in the game.
-     * @return SpriteManager The sprite manager.
-     */
-    protected SpriteManager getSpriteManager() {
-        return spriteManager;
-    }
-
-    /**
-     * Returns the JavaFX Scene. This is called the game surface to
-     * allow the developer to add JavaFX Node objects onto the Scene.
-     * @return
-     */
-    public Scene getGameSurface() {
+    /** Gets the scene that is used to play the game on */
+    public Scene getGameSurface(){
         return gameSurface;
     }
 
-    /**
-     * Sets the JavaFX Scene. This is called the game surface to
-     * allow the developer to add JavaFX Node objects onto the Scene.
-     * @param gameSurface The main game surface (JavaFX Scene).
-     */
-    protected void setGameSurface(Scene gameSurface) {
-        this.gameSurface = gameSurface;
+    /** Sets the collection of nodes used to render the game */
+    public void setNodes(Group nodes){
+        allNodes = nodes;
     }
 
-    /**
-     * All JavaFX nodes which are rendered onto the game surface(Scene) is
-     * a JavaFX Group object.
-     * @return Group The root containing many child nodes to be displayed into
-     * the Scene area.
-     */
-    public Group getSceneNodes() {
-        return sceneNodes;
+    /** Gets the collection of nodes used to render the game */
+    public Group getNodes(){
+        return allNodes;
     }
 
-    /**
-     * Sets the JavaFX Group that will hold all JavaFX nodes which are rendered
-     * onto the game surface(Scene) is a JavaFX Group object.
-     * @param sceneNodes The root container having many children nodes
-     * to be displayed into the Scene area.
-     */
-    protected void setSceneNodes(Group sceneNodes) {
-        this.sceneNodes = sceneNodes;
+    /** Sets the game loop to what was made in the makeGameLoop Class.
+     * Updates object movement, checks for collisions, and gets rid of our dead objects */
+    public void setGameLoop(Timeline timeline){
+        gameLoop = timeline;
     }
 
+    /** Gets the game loop that is currently being used to play the game */
+    public Timeline getGameLoop(){
+        return gameLoop;
+    }
 }
