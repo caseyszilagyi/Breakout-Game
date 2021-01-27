@@ -3,6 +3,8 @@ package breakout;
 import breakout.Game;
 import breakout.GameObject;
 import java.util.Random;
+
+import javafx.animation.AnimationTimer;
 import javafx.animation.Timeline;
 import javafx.event.Event;
 import javafx.event.EventHandler;
@@ -34,12 +36,16 @@ public class BreakoutGame extends Game{
     private final int BALL_YVELOCITY = 1;
 
     //Paddle Initialization
+    public Paddle paddle;
     private final int PADDLE_XINITIAL = 450;
     private final int PADDLE_YINITIAL = 790;
     private final int PADDLE_WIDTH = 100;
     private final int PADDLE_HEIGHT = 10;
-    private final int PADDLE_SPEED = 3;
-    public Paddle paddle;
+    private final int PADDLE_SPEED = 10;
+    // Deals with movement of paddle;
+    private boolean goRight = false;
+    private boolean goLeft = false;
+
 
     /**
      * This constructor calls the super constructor in the "Game" class.
@@ -95,7 +101,8 @@ public class BreakoutGame extends Game{
         makePaddle();
     }
 
-
+    /** Method to make the paddle and add it to our ObjectManager and GameNodes to be rendered.
+     */
     public void makePaddle(){
         paddle = new Paddle(PADDLE_XINITIAL, PADDLE_YINITIAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED);
         // add to all objects in play
@@ -103,7 +110,22 @@ public class BreakoutGame extends Game{
         // add node to group of nodes for graphics
         getNodes().getChildren().add(0, paddle.node);
 
-        //Makes EventHandler that deals with input from left/right keys to move paddle;
+        makePaddleEventHandlers();
+    }
+
+
+    /** Method to deal with the creation of our two paddle event handlers. One to deal with key presses,
+     * the other to deal with key releases
+     */
+    private void makePaddleEventHandlers() {
+        makeKeyPressedHandler();
+        makeKeyRelesedHandler();
+        makePaddleAnimation();
+    }
+
+    /** Makes the handler that deals with right/left key presses */
+    private void makeKeyPressedHandler() {
+        // Makes EventHandler that deals with input from left/right keys to move paddle;
         EventHandler paddleMove = new EventHandler(){
             @Override
             public void handle(Event event) {
@@ -113,22 +135,67 @@ public class BreakoutGame extends Game{
             }
         };
 
-        //Adds event handler to our game
+        // Adds EventHandler to our game
         getGameSurface().setOnKeyPressed(paddleMove);
-
-
     }
 
+    /** Makes the handler that deals with right/left key releases */
+    private void makeKeyRelesedHandler() {
+        // Makes EventHandler to deal with the release of the left/right key
+        EventHandler paddleStop = new EventHandler(){
+            @Override
+            public void handle(Event event) {
+                if(event instanceof KeyEvent){
+                    keyReleaseResponse((KeyEvent) event);
+                }
+            }
+        };
+
+        // Adds EventHandler to our game
+        getGameSurface().setOnKeyReleased(paddleStop);
+    }
+
+    /** Makes the animation timer that allows the paddle to move smoothly */
+    private void makePaddleAnimation(){
+        AnimationTimer timer = new AnimationTimer() {
+            @Override
+            public void handle(long now) {
+                if(goRight){
+                    paddle.moveRight();
+                }
+                else if(goLeft){
+                    paddle.moveLeft();
+                }
+            }
+        };
+
+        timer.start();
+    }
+
+
     /**
-     * Updates the paddle when the right/left key is pressed
+     * Updates the boolean values that determine if the left/right key is currently being pressed
      * @param event The key that is pressed
      */
     public void keyPressResponse(KeyEvent event){
         if(event.getCode() == KeyCode.LEFT){
-            paddle.moveLeft();
+            goLeft = true;
         }
         else if(event.getCode() == KeyCode.RIGHT){
-            paddle.moveRight();
+            goRight = true;
+        }
+    }
+
+    /**
+     * Updates the boolean values that determine if the left/right key is currently being released
+     * @param event The key that is released
+     */
+    public void keyReleaseResponse(KeyEvent event){
+        if(event.getCode() == KeyCode.LEFT){
+            goLeft = false;
+        }
+        else if(event.getCode() == KeyCode.RIGHT){
+            goRight = false;
         }
     }
 
@@ -161,8 +228,5 @@ public class BreakoutGame extends Game{
         // add node to group of nodes for graphics
         getNodes().getChildren().add(0, ball.node);
     }
-
-
-
 
 }
