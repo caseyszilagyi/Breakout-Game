@@ -1,7 +1,7 @@
 package breakout;
 
 import breakout.Game;
-import breakout.Sprite;
+import breakout.GameObject;
 import java.util.Random;
 import javafx.animation.Timeline;
 import javafx.event.EventHandler;
@@ -15,18 +15,20 @@ import javafx.scene.shape.Circle;
 import javafx.stage.Stage;
 import static javafx.animation.Animation.Status.RUNNING;
 import static javafx.animation.Animation.Status.STOPPED;
+import javafx.scene.shape.Rectangle;
+import java.util.ArrayList;
 
 public class BreakoutGame extends Game{
 
-    protected static final int GAME_HEIGHT = 800;
-    protected final int GAME_WIDTH = 1000;
+    private static final int GAME_HEIGHT = 800;
+    private static final int GAME_WIDTH = 1000;
 
     //Ball Initialization
     private final int BALL_RADIUS = 10;
     private final int BALL_XINITIAL = 500;
     private final int BALL_YINITIAL = 400;
-    private final int BALL_XVELOCITY = 0;
-    private final int BALL_YVELOCITY = 5;
+    private final int BALL_XVELOCITY = 5;
+    private final int BALL_YVELOCITY = 1;
 
     /**
      * This constructor calls the super constructor in the "Game" class.
@@ -45,12 +47,52 @@ public class BreakoutGame extends Game{
     public void start(final Stage primaryStage){
         primaryStage.setTitle(getWindowTitle());
 
-        setSceneNodes(new Group());
-        setGameSurface(new Scene(getSceneNodes(), GAME_WIDTH, GAME_HEIGHT));
+        setNodes(new Group());
+        setGameSurface(new Scene(getNodes(), GAME_WIDTH, GAME_HEIGHT));
         primaryStage.setScene(getGameSurface());
 
+        makeGameBorder();
         makeBallAndPaddle();
 
+    }
+
+    /**
+     * Updates the GameObject that's passed into the method.
+     * @param object - The GameObject to update.
+     */
+    @Override
+    public void updateObject(GameObject object){
+        object.update();
+    }
+
+    /**
+     * Deals with the collision of two GameObjects
+     * @param A - called from checkCollision() method to be compared.
+     * @param B - called from checkCollision() method to be compared.
+     * @return True if they collide
+     */
+    @Override
+    public boolean collide(GameObject A, GameObject B){
+        return super.collide(A,B);
+    }
+
+    /**
+     * Makes the game border so that collision with the edge is easier. The border is just a GameObject
+     * so that the game engine can deal with these collisioins as they do every other collision.
+     */
+    public void makeGameBorder(){
+        ArrayList<GameObject> borders = new ArrayList<GameObject>();
+        borders.add(new Border(-1, 0, 1, GAME_HEIGHT)); //left
+        borders.add(new Border(GAME_WIDTH, 0, 1, GAME_HEIGHT)); //right
+        borders.add(new Border(0, -1, GAME_WIDTH, 1)); //top
+
+        //Adding the borders to necessary groups
+        for(int i = 0; i<borders.size(); i++){
+            // add to all  GameObjects in play
+            getObjectManager().addObjects(borders.get(i));
+            // add GameObjects
+            getNodes().getChildren().add(0, borders.get(i).node);
+        }
     }
 
     /**
@@ -59,26 +101,6 @@ public class BreakoutGame extends Game{
     public void makeBallAndPaddle(){
         makeBall(BALL_XINITIAL, BALL_YINITIAL, BALL_RADIUS, BALL_XVELOCITY, BALL_YVELOCITY);
     }
-
-    /**
-     * Updates the sprite that is passed into the method. Each sprite has its own updaet method
-     * @param sprite - The sprite to update.
-     */
-    @Override
-    protected void handleUpdate(Sprite sprite){
-        sprite.update();
-    }
-
-    /**
-     * Deals with the collision of two sprite objects
-     * @param spriteA - called from checkCollision() method to be compared.
-     * @param spriteB - called from checkCollision() method to be compared.
-     * @return
-     */
-    protected boolean handleCollision(Sprite spriteA, Sprite spriteB){
-        return false;
-    }
-
 
     /**
      * Initializes the ball object
@@ -90,10 +112,10 @@ public class BreakoutGame extends Game{
      */
     public void makeBall(int xPos, int yPos, int radius, int xVel, int yVel){
         Ball ball = new Ball(xPos, yPos, radius, xVel, yVel);
-        // add to all sprite objects in play
-        getSpriteManager().addSprites(ball);
-        // add sprite's
-        getSceneNodes().getChildren().add(0, ball.node);
+        // add to all objects in play
+        getObjectManager().addObjects(ball);
+        // add node to group of nodes for graphics
+        getNodes().getChildren().add(0, ball.node);
     }
 
 
