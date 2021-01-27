@@ -5,7 +5,7 @@ import javafx.stage.Stage;
 
 /**
  * The main driver of the game.
- * @author cdea
+ * @author Casey Szilagyii
  */
 public class BreakoutDriver extends Application {
 
