@@ -33,7 +33,7 @@ public abstract class GameObject {
      * @param other - The other object.
      * @return Whether or not they collided
      */
-    public boolean collide(Sprite other){
+    public boolean collide(GameObject other){
         return node.getBoundsInParent().intersects(other.node.getBoundsInParent());
     }
 }
