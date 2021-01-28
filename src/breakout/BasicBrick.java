@@ -9,8 +9,6 @@ public class BasicBrick extends Brick{
      * @param startY Starting y position of the rectangle
      * @param width Starting width of the rectangle
      * @param height Starting height of the rectangle
-     * @param xVel Starting x Velocity of the rectangle
-     * @param yVel Starting y Velocity of the rectangle
      */
     public BasicBrick(int startX, int startY, int width, int height){
         super(startX, startY, width, height, 0, 0);
@@ -24,12 +22,18 @@ public class BasicBrick extends Brick{
     }
 
     /**
-     * Did this GameObject collide into the other one
+     * Did this GameObject collide into another one.
+     * The collide method for this class only checks for collision with the ball
      * @param other - The other object.
      * @return True if it did
      */
     public boolean collide(GameObject other){
-        return super.collide(other);
+        // Only breaks if collision is with a ball
+        if(other instanceof Ball && super.collide(other)){
+            isDead = true;
+            return true;
+        }
+        return false;
     }
 
 }
