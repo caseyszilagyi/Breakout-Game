@@ -58,8 +58,9 @@ public class LevelCreator {
     }
 
     public void makeSingleBrick(String brickCode){
-        if(brickCode.equals("1")){
-            BRICKS.add(new BasicBrick(xPos, yPos, brickWidth, brickHeight));
+        //A regular brick. Takes between 1 and 9 hits to destroy
+        if(Integer.parseInt(brickCode) > 0 && Integer.parseInt(brickCode) < 10){
+            BRICKS.add(new MultiHitBrick(xPos, yPos, brickWidth, brickHeight, Integer.parseInt(brickCode)));
         }
     }
 
