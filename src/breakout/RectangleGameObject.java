@@ -11,6 +11,8 @@ public abstract class RectangleGameObject extends GameObject{
      * @param startY Starting y position of the rectangle
      * @param width Starting width of the rectangle
      * @param height Starting height of the rectangle
+     * @param xVel Starting x Velocity of the rectangle
+     * @param yVel Starting y Velocity of the rectangle
      */
     public RectangleGameObject(int startX, int startY, int width, int height, int xVel, int yVel){
         Rectangle rectangle = new Rectangle(startX, startY, width, height);
