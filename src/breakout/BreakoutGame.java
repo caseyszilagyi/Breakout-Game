@@ -42,7 +42,7 @@ public class BreakoutGame extends Game{
     private final int PADDLE_XINITIAL = 450;
     private final int PADDLE_YINITIAL = 790;
     private final int PADDLE_WIDTH = 100;
-    private final int PADDLE_HEIGHT = 10;
+    private final int PADDLE_HEIGHT = 20;
     private final int PADDLE_SPEED = 10;
     // Deals with movement of paddle;
     private boolean goRight = false;
@@ -50,7 +50,7 @@ public class BreakoutGame extends Game{
 
     //Brick Properties (that are common among all bricks);
     private final int BRICK_WIDTH = 99;
-    private final int BRICK_HEIGHT = 10;
+    private final int BRICK_HEIGHT = 20;
     private final int BRICK_GAP = 1;
 
     //Makes a level creator
