@@ -102,7 +102,21 @@ public abstract class Game{
 
     /** Calls the cleanup method in ObjectManager, which removes objects that are no longer needed */
     public void cleanupDeadObjects(){
+        // Checks for dead objects using the object manager
+        objectManager.checkForDead();
+
+        // Gets rid of the dead object nodes so they won't be displayed
+        for(Object gameObject: objectManager.getObjectsToRemove()){
+            removeObjectDisplay((GameObject) gameObject);
+        }
+
+        // Removes the dead objects from the object manager
         objectManager.cleanUp();
+    }
+
+    /** Removes the display of this gameObject */
+    public void removeObjectDisplay(GameObject object){
+        getNodes().getChildren().remove(object.node);
     }
 
 
