@@ -37,7 +37,7 @@ public class LevelCreator {
      */
     public void readNewFile(String fileName){
         File file = new File (fileName);
-        scanner = new Scanner(fileName);
+        scanner = new Scanner(getClass().getClassLoader().getResourceAsStream(fileName));
         scanner.useDelimiter("");
     }
 
