@@ -10,6 +10,7 @@ import javafx.scene.Node;
  * @author Casey Szilagyi
  */
 public abstract class GameObject {
+
     /** Current display node */
     public Node node;
 
