@@ -75,6 +75,19 @@ public class ObjectManager {
         CHECK_COLLISIONS.addAll(ALL_OBJECTS);
     }
 
+    /** Checking to see if any of our game objects are dead, if so, add them to the list to be removed */
+    public void checkForDead(){
+        for(Object gameObject: getObjects()){
+            checkDeath((GameObject) gameObject);
+        }
+    }
+
+    /** Checks if any individual object is dead. If it is, add to objects to be removed */
+    public void checkDeath(GameObject gameObject){
+        if(gameObject.isDead){
+            addObjectsToRemove(gameObject);
+        }
+    }
 
     /**
      * Removes objects from the list of all objects and then clears the set of objects to be removed
