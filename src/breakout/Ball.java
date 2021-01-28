@@ -70,6 +70,4 @@ public class Ball extends CircleGameObject{
         return false;
     }
 
-
-    //Need to add separate collide methods for the paddle and the bricks.
 }
