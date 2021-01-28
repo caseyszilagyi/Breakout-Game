@@ -4,6 +4,7 @@ import javafx.scene.shape.Rectangle;
 
 public abstract class RectangleGameObject extends GameObject{
 
+    public Rectangle gameObject;
     /**
      * The rectangle class represents any GameObject that is rectangular, or has a rectuangular hitbox.
      * Also includes the borders.
@@ -19,6 +20,7 @@ public abstract class RectangleGameObject extends GameObject{
         XVelocity = xVel;
         YVelocity = yVel;
         node = rectangle;
+        gameObject = rectangle;
     }
 
     /**
