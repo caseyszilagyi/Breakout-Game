@@ -2,6 +2,8 @@ package breakout;
 
 import breakout.Game;
 import breakout.GameObject;
+
+import java.io.FileNotFoundException;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
@@ -28,14 +30,14 @@ public class BreakoutGame extends Game{
     private static final int GAME_HEIGHT = 800;
     private static final int GAME_WIDTH = 1000;
 
-    //Ball Initialization
+    //Ball Properties
     private final int BALL_RADIUS = 10;
     private final int BALL_XINITIAL = 500;
     private final int BALL_YINITIAL = 400;
     private final int BALL_XVELOCITY = 5;
     private final int BALL_YVELOCITY = 1;
 
-    //Paddle Initialization
+    //Paddle Properties
     public Paddle paddle;
     private final int PADDLE_XINITIAL = 450;
     private final int PADDLE_YINITIAL = 790;
@@ -46,6 +48,13 @@ public class BreakoutGame extends Game{
     private boolean goRight = false;
     private boolean goLeft = false;
 
+    //Brick Properties (that are common among all bricks);
+    private final int BRICK_WIDTH = 39;
+    private final int BRICK_HEIGHT = 10;
+    private final int BRICK_GAP = 0;
+
+    //Makes a level creator
+    LevelCreator levelCreator = new LevelCreator(BRICK_WIDTH, BRICK_HEIGHT, BRICK_GAP, GAME_WIDTH);
 
     /**
      * This constructor calls the super constructor in the "Game" class.
@@ -99,6 +108,7 @@ public class BreakoutGame extends Game{
         makeGameBorder();
         makeBall();
         makePaddle();
+        makeBricks();
     }
 
     /** Method to make the paddle and add it to our ObjectManager and GameNodes to be rendered.
@@ -223,10 +233,23 @@ public class BreakoutGame extends Game{
      */
     public void makeBall(){
         Ball ball = new Ball(BALL_XINITIAL, BALL_YINITIAL, BALL_RADIUS, BALL_XVELOCITY, BALL_YVELOCITY);
-        // add to all objects in play
+        // add to all objects in play for collision detection
         getObjectManager().addObjects(ball);
         // add node to group of nodes for graphics
         getNodes().getChildren().add(0, ball.node);
+    }
+
+
+    public void makeBricks(){
+        levelCreator.readNewFile("0101111000000000101010101010100101010001010101011110101010010101");
+        levelCreator.makeBricks();
+        ArrayList<GameObject> bricks = levelCreator.getBricks();
+        for(int i = 0; i<bricks.size(); i++){
+            // add to all objects in play for collision detection
+            getObjectManager().addObjects(bricks.get(i));
+            // add node to group of nodes for graphics
+            getNodes().getChildren().add(0, bricks.get(i).node);
+        }
     }
 
 }
