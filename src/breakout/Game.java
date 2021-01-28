@@ -37,7 +37,10 @@ public abstract class Game{
         makeGameLoop();
     }
 
-
+    /**
+     * Sets up the game loop by making an event handler and keyframe with that event handler.
+     * This is made into a timeline and is set to the global gameloop variable
+     */
     public void makeGameLoop(){
         final Duration oneFrameAmt = Duration.millis(1000/getFPS());
         EventHandler handle = event -> {
@@ -61,14 +64,13 @@ public abstract class Game{
     /** Initializes the game */
     public abstract void start(final Stage primaryStage);
 
+    /** Starts the timeline */
+    public void beginGameLoop(){ gameLoop.play(); }
 
-    public void beginGameLoop(){
-        gameLoop.play();
-    }
 
     //The following are parts of the game loop. These methods get called every time we update the frame
 
-    /** Cales the udpateObject method for each object */
+    /** Calls the updateObject method for each object */
     public void updateAllObjects(){
         for(Object gameObject:objectManager.getObjects()){
             updateObject((GameObject) gameObject);
@@ -98,7 +100,7 @@ public abstract class Game{
         return A.collide(B);
     }
 
-    /** Calls the cleanup method in objectmanager, which removes objects that are no longer needed */
+    /** Calls the cleanup method in ObjectManager, which removes objects that are no longer needed */
     public void cleanupDeadObjects(){
         objectManager.cleanUp();
     }
