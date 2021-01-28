@@ -9,6 +9,8 @@ public abstract class Brick extends RectangleGameObject{
      * @param startY Starting y position of the rectangle
      * @param width Starting width of the rectangle
      * @param height Starting height of the rectangle
+     * @param xVel Starting x Velocity of the rectangle
+     * @param yVel Starting y Velocity of the rectangle
      */
     public Brick(int startX, int startY, int width, int height, int xVel, int yVel){
         super(startX, startY, width, height, xVel, yVel);
