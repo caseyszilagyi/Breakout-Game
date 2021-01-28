@@ -1,9 +1,11 @@
 package breakout;
 
 import javafx.scene.shape.Circle;
+import javafx.scene.shape.Rectangle;
 
 public abstract class CircleGameObject extends GameObject{
 
+    public Circle gameObject;
     /**
      * The circle class represents any GameObject that is circular, or has a circular hitbox.
      * @param xPos Starting x position of the circle
@@ -17,6 +19,7 @@ public abstract class CircleGameObject extends GameObject{
         XVelocity = xVel;
         YVelocity = yVel;
         node = circle;
+        gameObject = circle;
     }
 
     /**
