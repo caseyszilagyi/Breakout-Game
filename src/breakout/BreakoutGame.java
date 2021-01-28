@@ -31,11 +31,11 @@ public class BreakoutGame extends Game{
     private static final int GAME_WIDTH = 1000;
 
     //Ball Properties
-    private final int BALL_RADIUS = 10;
+    private final int BALL_RADIUS = 5;
     private final int BALL_XINITIAL = 500;
     private final int BALL_YINITIAL = 400;
-    private final int BALL_XVELOCITY = 5;
-    private final int BALL_YVELOCITY = 1;
+    private final int BALL_XVELOCITY = 1;
+    private final int BALL_YVELOCITY = 10;
 
     //Paddle Properties
     public Paddle paddle;
@@ -49,9 +49,9 @@ public class BreakoutGame extends Game{
     private boolean goLeft = false;
 
     //Brick Properties (that are common among all bricks);
-    private final int BRICK_WIDTH = 39;
+    private final int BRICK_WIDTH = 99;
     private final int BRICK_HEIGHT = 10;
-    private final int BRICK_GAP = 0;
+    private final int BRICK_GAP = 1;
 
     //Makes a level creator
     LevelCreator levelCreator = new LevelCreator(BRICK_WIDTH, BRICK_HEIGHT, BRICK_GAP, GAME_WIDTH);
@@ -91,7 +91,8 @@ public class BreakoutGame extends Game{
     }
 
     /**
-     * Deals with the collision of two GameObjects
+     * Deals with the collision of two GameObjects. Leads to the calling of the collision method
+     * of GameObject A
      * @param A - called from checkCollision() method to be compared.
      * @param B - called from checkCollision() method to be compared.
      * @return True if they collide
@@ -241,7 +242,7 @@ public class BreakoutGame extends Game{
 
 
     public void makeBricks(){
-        levelCreator.readNewFile("0101111000000000101010101010100101010001010101011110101010010101");
+        levelCreator.readNewFile("FirstLevel.txt");
         levelCreator.makeBricks();
         ArrayList<GameObject> bricks = levelCreator.getBricks();
         for(int i = 0; i<bricks.size(); i++){
