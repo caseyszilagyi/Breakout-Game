@@ -46,7 +46,7 @@ public class LevelCreator {
         xPos = 0;
         yPos = 0;
         while(scanner.hasNext()){
-            makeSingleBrick(scanner.next());
+            makeSingleBrick(scanner.next().charAt(0));
             //Moves the x location along the row
             xPos += (brickWidth + brickGap);
             //If next brick would go off the screen
@@ -57,10 +57,14 @@ public class LevelCreator {
         }
     }
 
-    public void makeSingleBrick(String brickCode){
+    public void makeSingleBrick(char brickCode){
         //A regular brick. Takes between 1 and 9 hits to destroy
-        if(Integer.parseInt(brickCode) > 0 && Integer.parseInt(brickCode) < 10){
-            BRICKS.add(new MultiHitBrick(xPos, yPos, brickWidth, brickHeight, Integer.parseInt(brickCode)));
+        if(brickCode - '0' > 0 && brickCode - '0' < 10){
+            BRICKS.add(new MultiHitBrick(xPos, yPos, brickWidth, brickHeight, brickCode - '0'));
+        }
+        //A row destroy brick. Destroys the entire row it is a part of.
+        else if(brickCode - 'r' == 0){
+           BRICKS.add(new RowDestroyBrick(xPos, yPos, brickWidth, brickHeight));
         }
     }
 
