@@ -1,7 +1,6 @@
 package breakout;
 
 import javafx.scene.shape.Circle;
-import javafx.scene.shape.Rectangle;
 
 public abstract class CircleGameObject extends GameObject{
 
