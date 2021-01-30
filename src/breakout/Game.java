@@ -50,6 +50,8 @@ public abstract class Game{
             checkCollisions();
             //Gets rid of objects that are no longer alive
             cleanupDeadObjects();
+            //Updates all of the variables that are keeping track of the game status
+            updateGameValues();
         };
         //Setting the keyframe with a duration and our event handler
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt, handle);
@@ -118,6 +120,8 @@ public abstract class Game{
     public void removeObjectDisplay(GameObject object){
         getNodes().getChildren().remove(object.node);
     }
+
+    public abstract void updateGameValues();
 
 
     //Below are all of the getters/setters of the class variables
