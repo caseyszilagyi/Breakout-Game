@@ -44,14 +44,14 @@ public abstract class Game{
     public void makeGameLoop(){
         final Duration oneFrameAmt = Duration.millis(1000/getFPS());
         EventHandler handle = event -> {
+            //Updates all of the variables that are keeping track of the game status
+            updateGameValues();
             //Moves all of our objects
             updateAllObjects();
             //Checks for collisions
             checkCollisions();
             //Gets rid of objects that are no longer alive
             cleanupDeadObjects();
-            //Updates all of the variables that are keeping track of the game status
-            updateGameValues();
         };
         //Setting the keyframe with a duration and our event handler
         final KeyFrame oneFrame = new KeyFrame(oneFrameAmt, handle);
@@ -121,6 +121,7 @@ public abstract class Game{
         getNodes().getChildren().remove(object.node);
     }
 
+    /** Update values that are central to the status of the game, such as lives and score */
     public abstract void updateGameValues();
 
 
