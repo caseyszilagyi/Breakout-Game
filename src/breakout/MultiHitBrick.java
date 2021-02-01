@@ -67,6 +67,7 @@ public class MultiHitBrick extends Brick{
             health--;
             if(health == 0){
                 isDead = true;
+                return true;
             }
         }
         return false;
