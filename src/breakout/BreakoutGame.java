@@ -5,6 +5,7 @@ import breakout.GameObject;
 
 import java.io.FileNotFoundException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Random;
 
 import javafx.animation.AnimationTimer;
@@ -13,10 +14,12 @@ import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -29,21 +32,16 @@ import java.util.ArrayList;
 
 public class BreakoutGame extends Game{
 
+    // Game size and positioning of score/lives text
     private static final int GAME_HEIGHT = 800;
     private static final int GAME_WIDTH = 1000;
-    private static final int GAME_BORDER_HEIGHT = 99;
-    private static final int GAME_TEXT_X = 10;
+    private static final int GAME_TEXT_X = 300;
     private static final int GAME_TEXT_Y = 50;
 
-    // Brick Properties (that are common among all bricks);
-    private final int BRICK_WIDTH = 99;
-    private final int BRICK_HEIGHT = 20;
-    private final int BRICK_GAP = 1;
-
     // GameObjects that we need access to
-    public Ball ball;
-    public Paddle paddle;
-    public Text message;
+    private Ball ball;
+    private Paddle paddle;
+    private Text message;
 
     // Deals with movement of paddle;
     private boolean goRight = false;
@@ -52,9 +50,19 @@ public class BreakoutGame extends Game{
     // Game Properties
     private int livesRemaining = 3;
     private int currentScore = 0;
+    private int currentLevel = 0; // indicates that game hasn't started.
+    private final ArrayList<String> LEVEL_FILES = new ArrayList<String>(
+            Arrays.asList("FirstLevel.txt", "SecondLevel.txt"));
 
-    //Makes a level creator
-    LevelCreator levelCreator = new LevelCreator(BRICK_WIDTH, BRICK_HEIGHT, BRICK_GAP, GAME_WIDTH, GAME_BORDER_HEIGHT);
+    //Makes a level creator and level handler
+    LevelCreator levelCreator = new LevelCreator();
+    LevelHandler levelHandler;
+
+    private Scene beforeGameScene;
+    private Scene betweenLevelsScene;
+    private Scene winScene;
+    private Scene loseScene;
+    private Stage gameDisplay;
 
     /**
      * This constructor calls the super constructor in the "Game" class.
@@ -71,33 +79,80 @@ public class BreakoutGame extends Game{
      * @param primaryStage The stage constructed by the platform to be updated
      */
     public void start(final Stage primaryStage){
+        gameDisplay = primaryStage;
         primaryStage.setTitle(getWindowTitle());
 
-        setNodes(new Group());
-        setGameSurface(new Scene(getNodes(), GAME_WIDTH, GAME_HEIGHT));
-        primaryStage.setScene(getGameSurface());
+        makeOtherDisplayScenes();
+        primaryStage.setScene(beforeGameScene);
 
-        makeGameComponents();
-        makeGameScoreAndLives();
+        //Setting the buttons in the other scenes to result in a level being played
+        levelHandler.getStartButton().setOnAction(e -> makeGameComponents());
+        levelHandler.getBetweenLevelsButton().setOnAction(e -> makeGameComponents());
+
+    }
+
+    /** Makes the start up screen and waits for a key press to begin */
+    public void makeOtherDisplayScenes(){
+        levelHandler = new LevelHandler(GAME_WIDTH, GAME_HEIGHT);
+        beforeGameScene = levelHandler.makeAndReturnStartUpScreen();
+        betweenLevelsScene = levelHandler.makeAndReturnBetweenLevelsScreen();
+        winScene = levelHandler.makeAndReturnWinScene();
+        loseScene = levelHandler.makeAndReturnLoseScene();
     }
 
 
-    public void makeGameScoreAndLives(){
-        message = new Text(GAME_TEXT_X,GAME_TEXT_Y,"Score: " + Integer.toString(currentScore) +
-                " Lives: " + Integer.toString(livesRemaining));
-        message.setScaleX(5);
-        message.setScaleY(5);
-        getNodes().getChildren().add(0, message);
-    }
+    /** Method to update the score and lives
+     * Checks to see if the game is in progress before doing anything */
     @Override
     public void updateGameValues() {
-        message.setText("Score: " + Integer.toString(currentScore) +  " Lives: " + Integer.toString(livesRemaining));
-        currentScore++;
+        //If game is being played
+        if(currentLevel > 0) {
+            //If level is done
+            if (checkIfFinishedLevel()) {
+                //Check to see if it was final level
+                if(currentLevel == LEVEL_FILES.size()){
+                    gameDisplay.setScene(winScene);
+                }
+                else {
+                    gameDisplay.setScene(betweenLevelsScene);
+                }
+            }
+
+            //Checks if game should still be playable
+            if(livesRemaining <= 0){
+                gameDisplay.setScene(loseScene);
+            }
+
+            checkIfBallIsInPlay();
+            message.setText("Lives: " + Integer.toString(livesRemaining) + " Score: " + Integer.toString(currentScore)
+                    + " Level: " + Integer.toString(currentLevel));
+        }
     }
+
+    /** Checks if a level is done being played by seeing if there are any bricks
+     * @return True if no bricks
+     */
+    public boolean checkIfFinishedLevel(){
+        for(Object singleObject: getObjectManager().getObjects()){
+            if(singleObject instanceof Brick){
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /** Updating the game object. The super method simply calls the update method in the class of the
+     * GameObject itself. The rest of this method checks for the ball exiting the screen (to lose a life);
+     * @param gameObject
+     */
+    public void updateObject(GameObject gameObject){
+        super.updateObject(gameObject);
+    }
+
 
     /**
      * Deals with the collision of two GameObjects. Leads to the calling of the collision method
-     * of GameObject A
+     * of GameObject A, and also checks conditionals for managment of the game
      * @param A - called from checkCollision() method to be compared.
      * @param B - called from checkCollision() method to be compared.
      * @return True if they collide
@@ -106,20 +161,32 @@ public class BreakoutGame extends Game{
     public boolean collide(GameObject A, GameObject B){
         boolean collide = super.collide(A, B);
 
-        //Checks if it is a row destroy brick
-        if(collide && A instanceof RowDestroyBrick){
-            destroyRow(((RowDestroyBrick) A).gameObject.getY());
-        }
-        //Checks if it is a power up brick
-        else if(collide && A instanceof DropPowerUpBrick){
-            Rectangle currentBrick = ((DropPowerUpBrick) A).gameObject;
-            dropPowerUp(currentBrick.getX() + currentBrick.getWidth()/2,
-                    currentBrick.getY() + currentBrick.getHeight()/2);
+        if(collide){
+            updateScore(A, B);
         }
 
+        // Otherwise, just return whether the items collided
         return collide;
     }
 
+    public void updateScore(GameObject A, GameObject B){
+        if(A instanceof Brick && B instanceof Ball){
+            currentScore += 100;
+        }
+
+        //Checks if it is a row destroy brick
+        if(A instanceof RowDestroyBrick && B instanceof Ball){
+            destroyRow(((RowDestroyBrick) A).gameObject.getY());
+            currentScore += 900;
+        }
+        //Checks if it is a power up brick
+        else if(A instanceof DropPowerUpBrick && B instanceof Ball){
+            Rectangle currentBrick = ((DropPowerUpBrick) A).gameObject;
+            dropPowerUp(currentBrick.getX() + currentBrick.getWidth()/2,
+                    currentBrick.getY() + currentBrick.getHeight()/2);
+            currentScore += 400;
+        }
+    }
 
 
     /** Destroys the row specified by the X position of the RowDestroyBrick by looping through all GameObjects
@@ -132,6 +199,7 @@ public class BreakoutGame extends Game{
         }
     }
 
+    /** Makes a power up that falls in the location of the destroyed brick */
     public void dropPowerUp(double xPos, double yPos){
         PowerUp powerUp = new PowerUp(xPos, yPos);
         // add to all objects in play
@@ -140,31 +208,46 @@ public class BreakoutGame extends Game{
         getNodes().getChildren().add(0, powerUp.node);
     }
 
-
-
-    //All of this below should be added to the LevelCreator class if there is time
+    /** Checks whether the ball is still in play */
+    public void checkIfBallIsInPlay(){
+        if(currentLevel > 0 && ball.node.getTranslateY() + ball.node.getLayoutY() > GAME_HEIGHT){
+            ball.isDead = true;
+            ball = levelCreator.makeBall();
+            getObjectManager().addObjects(ball);
+            //add node to group of nodes for graphics
+            getNodes().getChildren().add(0, ball.node);
+            livesRemaining--;
+        }
+    }
 
 
     /**
-     * Method to make all of the game components
+     * Method to make all of the objects that make up the game
      */
     public void makeGameComponents(){
-        levelCreator.makeGameBorder();
-        levelCreator.makeBall();
-        levelCreator.makePaddle();
+        setNodes(new Group());
+        setGameSurface(new Scene(getNodes(), GAME_WIDTH, GAME_HEIGHT));
 
-        levelCreator.readNewFile("FirstLevel.txt");
-        levelCreator.makeBricks();
+        // Reading in the current level
+        levelCreator.readNewFile(LEVEL_FILES.get(currentLevel));
+        currentLevel++;
+        // Making the game components
+        levelCreator.makeGameComponents();
 
-        makePaddleEventHandlers();
         makeAllObjects();
+        makePaddleEventHandlers();
+        makeGameScoreAndLives();
+
+        gameDisplay.setScene(getGameSurface());
     }
 
-    /** This loop gets all of the gameObjects that were created in the levelcreator and adds them to
-     * the objectmanager for collision management, and the set of nodes for display
+    /** This loop gets all of the gameObjects that were created in the LevelCreator and adds them to
+     * the ObjectManager for collision management, and the set of nodes for display
      */
     public void makeAllObjects(){
         ArrayList<GameObject> gameComponent = levelCreator.getGameComponents();
+        getObjectManager().getObjects().clear();
+        getNodes().getChildren().clear();
         for(int i = 0; i<gameComponent.size(); i++){
             //add to all objects in play for collision detection
             getObjectManager().addObjects(gameComponent.get(i));
@@ -183,9 +266,17 @@ public class BreakoutGame extends Game{
         }
     }
 
+    /** Initializes the display of the game score and lives */
+    public void makeGameScoreAndLives(){
+        message = new Text(GAME_TEXT_X,GAME_TEXT_Y,"Lives: " + Integer.toString(livesRemaining)
+                + " Score: " + Integer.toString(currentScore));
+        message.setScaleX(5);
+        message.setScaleY(5);
+        getNodes().getChildren().add(0, message);
+    }
 
 
-
+    //Below this are all of the components to deal with the movement of the paddle
 
     /** Method to deal with the creation of our two paddle event handlers. One to deal with key presses,
      * the other to deal with key releases
@@ -271,6 +362,5 @@ public class BreakoutGame extends Game{
             goRight = false;
         }
     }
-
 
 }
