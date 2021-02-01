@@ -55,13 +55,16 @@ public class BreakoutGame extends Game{
             Arrays.asList("FirstLevel.txt", "SecondLevel.txt"));
 
     //Makes a level creator and level handler
-    LevelCreator levelCreator = new LevelCreator();
-    LevelHandler levelHandler;
+    private LevelCreator levelCreator = new LevelCreator();
+    private LevelHandler levelHandler;
 
+    //The various scenes that the game will change between, depending on whether a level is currently being played
     private Scene beforeGameScene;
     private Scene betweenLevelsScene;
     private Scene winScene;
     private Scene loseScene;
+
+    //The game stage
     private Stage gameDisplay;
 
     /**
@@ -161,14 +164,17 @@ public class BreakoutGame extends Game{
     public boolean collide(GameObject A, GameObject B){
         boolean collide = super.collide(A, B);
 
-        if(collide){
+        if(collide && (A instanceof Ball || B instanceof Ball)){
             updateScore(A, B);
+            updateBallVelocityBasedOnPaddleBounce(A, B);
         }
 
-        // Otherwise, just return whether the items collided
+
+
         return collide;
     }
 
+    /** Checks whether the ball collided with a brick in order to update the score */
     public void updateScore(GameObject A, GameObject B){
         if(A instanceof Brick && B instanceof Ball){
             currentScore += 100;
@@ -185,6 +191,15 @@ public class BreakoutGame extends Game{
             dropPowerUp(currentBrick.getX() + currentBrick.getWidth()/2,
                     currentBrick.getY() + currentBrick.getHeight()/2);
             currentScore += 400;
+        }
+    }
+
+    /** Changes the speed and direction of the ball based on what part of the paddle it hits */
+    public void updateBallVelocityBasedOnPaddleBounce(GameObject A, GameObject B){
+        if(A instanceof Paddle || B instanceof Paddle){
+            double paddleCenter = paddle.gameObject.getX() + paddle.node.getTranslateX() + paddle.gameObject.getWidth()/2;
+            double diffOfBallCenterAndPaddleCenter = (ball.gameObject.getCenterX() + ball.gameObject.getTranslateX()) - paddleCenter;
+            ball.XVelocity = diffOfBallCenterAndPaddleCenter/5;
         }
     }
 
