@@ -52,7 +52,7 @@ public class BreakoutGame extends Game{
     private int currentScore = 0;
     private int currentLevel = 0; // indicates that game hasn't started.
     private final ArrayList<String> LEVEL_FILES = new ArrayList<String>(
-            Arrays.asList("FirstLevel.txt", "SecondLevel.txt"));
+            Arrays.asList("FirstLevel.txt", "SecondLevel.txt", "ThirdLevel.txt"));
     private final double GOOD_POWERUP_PROBABILITY= 0.5;
 
     //Makes a level creator and level handler and power up manager
@@ -208,7 +208,8 @@ public class BreakoutGame extends Game{
         if(A instanceof Paddle || B instanceof Paddle){
             double paddleCenter = paddle.gameObject.getX() + paddle.node.getTranslateX() + paddle.gameObject.getWidth()/2;
             double diffOfBallCenterAndPaddleCenter = (ball.gameObject.getCenterX() + ball.gameObject.getTranslateX()) - paddleCenter;
-            ball.XVelocity = diffOfBallCenterAndPaddleCenter/5;
+            ball.XVelocity = Math.sqrt(Math.abs(diffOfBallCenterAndPaddleCenter)) *
+            diffOfBallCenterAndPaddleCenter/Math.abs(diffOfBallCenterAndPaddleCenter);
         }
     }
 
@@ -372,6 +373,7 @@ public class BreakoutGame extends Game{
 
     /**
      * Updates the boolean values that determine if the left/right key is currently being pressed
+     * Also implements all of the cheat coodes.
      * @param event The key that is pressed
      */
     public void keyPressResponse(KeyEvent event){
@@ -380,6 +382,37 @@ public class BreakoutGame extends Game{
         }
         else if(event.getCode() == KeyCode.RIGHT){
             goRight = true;
+        }
+        else if(event.getCode() == KeyCode.L){
+            livesRemaining++;
+        }
+        else if(event.getCode() == KeyCode.R){
+            ball.isDead = true;
+            paddle.isDead = true;
+            paddle = levelCreator.makePaddle();
+            ball = levelCreator.makeBall();
+            getObjectManager().addObjects(paddle,ball);
+            getNodes().getChildren().add(0, ball.node);
+            getNodes().getChildren().add(0, paddle.node);
+        }
+        else if(event.getCode().isDigitKey()){
+            int level = '9' - event.getCode().getChar().charAt(0);
+            if(level >= LEVEL_FILES.size()){
+                currentLevel = LEVEL_FILES.size() - 1;
+                makeGameComponents();
+            }
+            else{
+                currentLevel = level;
+                makeGameComponents();
+            }
+        }
+        else if(event.getCode() == KeyCode.S){
+            ball.XVelocity /= 1.5;
+            ball.YVelocity /= 1.5;
+        }
+        else if(event.getCode() == KeyCode.B){
+            paddle.gameObject.setWidth(2000);
+            paddle.gameObject.setX(-500);
         }
     }
 
