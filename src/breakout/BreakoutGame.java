@@ -53,10 +53,13 @@ public class BreakoutGame extends Game{
     private int currentLevel = 0; // indicates that game hasn't started.
     private final ArrayList<String> LEVEL_FILES = new ArrayList<String>(
             Arrays.asList("FirstLevel.txt", "SecondLevel.txt"));
+    private final double GOOD_POWERUP_PROBABILITY= 0.5;
 
-    //Makes a level creator and level handler
+    //Makes a level creator and level handler and power up manager
     private LevelCreator levelCreator = new LevelCreator();
     private LevelHandler levelHandler;
+    private PowerUpManager powerUpManager;
+    private Random random = new Random();
 
     //The various scenes that the game will change between, depending on whether a level is currently being played
     private Scene beforeGameScene;
@@ -118,6 +121,7 @@ public class BreakoutGame extends Game{
                 }
                 else {
                     gameDisplay.setScene(betweenLevelsScene);
+                    getGameLoop().pause();
                 }
             }
 
@@ -155,7 +159,9 @@ public class BreakoutGame extends Game{
 
     /**
      * Deals with the collision of two GameObjects. Leads to the calling of the collision method
-     * of GameObject A, and also checks conditionals for managment of the game
+     * of GameObject A, and also checks conditionals for management of the game
+     * Bouncing off of bricks/borders is done within the respective classes. This collide method is only
+     * for details that need to be updated within the BreakoutGame class
      * @param A - called from checkCollision() method to be compared.
      * @param B - called from checkCollision() method to be compared.
      * @return True if they collide
@@ -164,11 +170,14 @@ public class BreakoutGame extends Game{
     public boolean collide(GameObject A, GameObject B){
         boolean collide = super.collide(A, B);
 
-        if(collide && (A instanceof Ball || B instanceof Ball)){
+        if(collide && (B instanceof Ball)){
             updateScore(A, B);
             updateBallVelocityBasedOnPaddleBounce(A, B);
         }
 
+        if(collide && A instanceof Paddle && B instanceof PowerUp){
+            powerUpManager.dealWithPowerUp((PowerUp) B);
+        }
 
 
         return collide;
@@ -176,17 +185,17 @@ public class BreakoutGame extends Game{
 
     /** Checks whether the ball collided with a brick in order to update the score */
     public void updateScore(GameObject A, GameObject B){
-        if(A instanceof Brick && B instanceof Ball){
+        if(A instanceof Brick){
             currentScore += 100;
         }
 
         //Checks if it is a row destroy brick
-        if(A instanceof RowDestroyBrick && B instanceof Ball){
+        if(A instanceof RowDestroyBrick){
             destroyRow(((RowDestroyBrick) A).gameObject.getY());
             currentScore += 900;
         }
         //Checks if it is a power up brick
-        else if(A instanceof DropPowerUpBrick && B instanceof Ball){
+        else if(A instanceof DropPowerUpBrick){
             Rectangle currentBrick = ((DropPowerUpBrick) A).gameObject;
             dropPowerUp(currentBrick.getX() + currentBrick.getWidth()/2,
                     currentBrick.getY() + currentBrick.getHeight()/2);
@@ -203,9 +212,8 @@ public class BreakoutGame extends Game{
         }
     }
 
-
-    /** Destroys the row specified by the X position of the RowDestroyBrick by looping through all GameObjects
-     * and seeing if they have the same x position */
+    /** Destroys the row specified by the Y position of the RowDestroyBrick by looping through all GameObjects
+     * and seeing if they have the same Y position */
     public void destroyRow(double yPos){
         for(Object singleObject: getObjectManager().getObjects()){
             if(singleObject instanceof Brick && ((Brick) singleObject).gameObject.getY() == yPos){
@@ -216,7 +224,14 @@ public class BreakoutGame extends Game{
 
     /** Makes a power up that falls in the location of the destroyed brick */
     public void dropPowerUp(double xPos, double yPos){
-        PowerUp powerUp = new PowerUp(xPos, yPos);
+        PowerUp powerUp;
+        if(random.nextDouble() > GOOD_POWERUP_PROBABILITY){
+            powerUp = new BadPowerUp(xPos, yPos);
+        }
+        else{
+            powerUp = new GoodPowerUp(xPos, yPos);
+        }
+
         // add to all objects in play
         getObjectManager().addObjects(powerUp);
         // add node to group of nodes for graphics
@@ -253,7 +268,10 @@ public class BreakoutGame extends Game{
         makePaddleEventHandlers();
         makeGameScoreAndLives();
 
+        powerUpManager= new PowerUpManager(paddle, ball);
+
         gameDisplay.setScene(getGameSurface());
+        getGameLoop().play();
     }
 
     /** This loop gets all of the gameObjects that were created in the LevelCreator and adds them to
