@@ -19,7 +19,7 @@ public class LevelCreator {
     public Ball ball;
     private final int BALL_RADIUS = 5;
     private final int BALL_XINITIAL = 500;
-    private final int BALL_YINITIAL = 400;
+    private final int BALL_YINITIAL = 300;
     private final int BALL_XVELOCITY = 1;
     private final int BALL_YVELOCITY = 10;
 
@@ -69,13 +69,6 @@ public class LevelCreator {
         yPos = GAME_BORDER_HEIGHT;
         while(scanner.hasNext()){
             makeSingleBrick(scanner.next().charAt(0));
-            //Moves the x location along the row
-            xPos += (BRICK_WIDTH + BRICK_GAP);
-            //If next brick would go off the screen
-            if(xPos + BRICK_WIDTH > GAME_WIDTH){
-                xPos = 0;
-                yPos += (BRICK_HEIGHT + BRICK_GAP);
-            }
         }
     }
 
@@ -95,6 +88,17 @@ public class LevelCreator {
         //A power up brick. Drops a power up when destroyed
         else if(brickCode - 'p' == 0){
             ALL_GAME_OBJECTS.add(new DropPowerUpBrick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT));
+        }
+
+        //Only moves position if it is not end of line
+        if (Character.isLetterOrDigit(brickCode)) {
+            //Moves the x location along the row
+            xPos += (BRICK_WIDTH + BRICK_GAP);
+            //If next brick would go off the screen
+            if(xPos + BRICK_WIDTH > GAME_WIDTH){
+                xPos = 0;
+                yPos += (BRICK_HEIGHT + BRICK_GAP);
+            }
         }
 
     }
