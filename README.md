@@ -11,15 +11,24 @@ Start Date: 1/23/21 (Saturday)
 Finish Date: 2/1/21
 
 Hours Spent: 36
-Saturday: 1
-Sunday: 5
-Monday: 6
-Tuesday: 4
-Wednesday: 3
-Thursday: 4
-Friday: 0
-Saturday: 3
-Sunday: 10
+
+-Saturday: 1
+
+-Sunday: 5
+
+-Monday: 6
+
+-Tuesday: 4
+
+-Wednesday: 3
+
+-Thursday: 4
+
+-Friday: 0
+
+-Saturday: 3
+
+-Sunday: 10
 
 ### Resources Used
 **For the bricks:**
@@ -110,11 +119,15 @@ Key/Mouse inputs:
 Left/Right Arrow Keys: Move the Paddle
 
 Cheat keys:
-L: Adds a life
-R: Resets Ball/Paddle Location
-1-9: Changes Level
-B: Makes a bigger Paddle
-S: Slows down the ball
+-L: Adds a life
+
+-R: Resets Ball/Paddle Location
+
+-1-9: Changes Level
+
+-B: Makes a bigger Paddle
+
+-S: Slows down the ball
 
 ### Notes/Assumptions
 
@@ -126,7 +139,7 @@ Known Bugs:
 - When the ball hits the corner of a brick it often doesn't bounce off in the way it is supposed to.
 This is due to an error in the ball bouncing logic that I couldn't quite get right.
   
-- The bad power up that speeds up the ball only works occasionally
+- The bad power up that speeds up the ball only works occasionally.
 
 - The paddle gets more sensitive to the arrow keys each time a new level is reached.
 
