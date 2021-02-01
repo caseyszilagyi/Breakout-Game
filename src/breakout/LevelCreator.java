@@ -20,14 +20,14 @@ public class LevelCreator {
     private final int BALL_RADIUS = 5;
     private final int BALL_XINITIAL = 500;
     private final int BALL_YINITIAL = 300;
-    private final int BALL_XVELOCITY = 1;
-    private final int BALL_YVELOCITY = 10;
+    private final int BALL_XVELOCITY = 0;
+    private final int BALL_YVELOCITY = 8;
 
     // Paddle Properties
     public Paddle paddle;
     private final int PADDLE_XINITIAL = 450;
     private final int PADDLE_YINITIAL = 790;
-    private final int PADDLE_WIDTH = 100;
+    private final int PADDLE_WIDTH = 200;
     private final int PADDLE_HEIGHT = 20;
     private final int PADDLE_SPEED = 10;
 
@@ -134,10 +134,11 @@ public class LevelCreator {
 
     /** Method to make the paddle and add it to our ObjectManager and GameNodes to be rendered.
      */
-    public void makePaddle(){
+    public Paddle makePaddle(){
         paddle = new Paddle(PADDLE_XINITIAL, PADDLE_YINITIAL, PADDLE_WIDTH, PADDLE_HEIGHT, PADDLE_SPEED);
         // add to all objects in play
         ALL_GAME_OBJECTS.add(paddle);
+        return paddle;
     }
 
 
