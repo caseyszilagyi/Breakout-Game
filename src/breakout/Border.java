@@ -1,28 +1,38 @@
 package breakout;
 
-import javafx.scene.shape.Rectangle;
 
-public class Border extends RectangleGameObject{
+/**
+ * @author Casey Szilagyi
+ */
+public class Border extends RectangleGameObject {
 
-    /**
-     * Border class to outline the playing board. This makes it easier to deal with ball/powerup collisions with the
-     * edge of the playing space
-     * @param startX Starting x position of the rectangle
-     * @param startY Startinig y positioin of the rectangle
-     * @param width Starting width of the rectangle
-     * @param height Starting heiight of the rectangle
-     */
-    public Border(int startX, int startY, int width, int height){
-        super(startX, startY, width, height, 0, 0);
-    }
+  /**
+   * Outlines the playing bord. This makes it so that ball collisions with the edge of the screen
+   * can be dealt with like any other collision. The call to the super constructor simply makes a
+   * rectangle of the specified sizes, widths, and with a velocity of 0.
+   *
+   * @param startX Starting x position of the border
+   * @param startY Starting y position of the border
+   * @param width  Width of the border
+   * @param height Height of the border
+   */
+  public Border(int startX, int startY, int width, int height) {
+    super(startX, startY, width, height, 0, 0);
+  }
 
-    /**
-     * Update method does nothing because this is the border. It doesn't move or change.
-     */
-    public void update(){
-    }
+  /**
+   * Update method does nothing because this is the border. It doesn't move or change ever;
+   */
+  public void update() {
+  }
 
-    public boolean collide(){
-        return false;
-    }
+  /**
+   * Any interaction with the border is already dealt with in the ball class, and the border doesn't
+   * have any other purpose
+   *
+   * @return false;
+   */
+  public boolean collide() {
+    return false;
+  }
 }
