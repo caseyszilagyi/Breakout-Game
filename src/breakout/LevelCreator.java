@@ -1,24 +1,16 @@
 package breakout;
 
-import javafx.animation.AnimationTimer;
-import javafx.event.Event;
-import javafx.event.EventHandler;
-import javafx.scene.Scene;
-import javafx.scene.input.KeyCode;
-import javafx.scene.input.KeyEvent;
-
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Scanner;
 
 
 public class LevelCreator {
     Scanner scanner;
+    // This is returned to the BreakoutGame Class to add the objects to the ones being used in the game
     private final static ArrayList ALL_GAME_OBJECTS = new ArrayList<GameObject>();
 
-
+    // Size of the window, as well as the distance the top border is down from the top of the window.
     private static final int GAME_HEIGHT = 800;
     private static final int GAME_WIDTH = 1000;
     private static final int GAME_BORDER_HEIGHT = 99;
@@ -38,34 +30,18 @@ public class LevelCreator {
     private final int PADDLE_WIDTH = 100;
     private final int PADDLE_HEIGHT = 20;
     private final int PADDLE_SPEED = 10;
-    // Deals with movement of paddle;
-    private boolean goRight = false;
-    private boolean goLeft = false;
 
     // Brick Properties (that are common among all bricks);
     private final int BRICK_WIDTH = 99;
     private final int BRICK_HEIGHT = 20;
     private final int BRICK_GAP = 1;
 
-
-    // All details necessary for the loop to function so that we have bricks being drawn in the right places
-    private int brickWidth;
-    private int brickHeight;
-    private int gameWidth;
-    private int brickGap;
-    private int brickStart;
-
     // Current position of the brick we are designing. These get incremented in the makeBricks loop
     private int xPos;
     private int yPos;
 
     /** The LevelCreator class has everything required to make a level */
-    public LevelCreator(int bWidth, int bHeight, int bGap, int gWidth, int bStart){
-        brickWidth = bWidth;
-        brickHeight = bHeight;
-        brickGap = bGap;
-        gameWidth = gWidth;
-        brickStart = bStart + 1;
+    public LevelCreator(){
     }
 
     /** Method to change the file that the scanner is reading.
@@ -78,18 +54,27 @@ public class LevelCreator {
         scanner.useDelimiter("");
     }
 
+    /** Makes all components of the game to play */
+    public void makeGameComponents(){
+        ALL_GAME_OBJECTS.clear();
+        makeGameBorder();
+        makeBall();
+        makePaddle();
+        makeBricks();
+    }
+
     /** Method to create all the bricks needed to play our game. */
     public void makeBricks(){
         xPos = 0;
-        yPos = brickStart;
+        yPos = GAME_BORDER_HEIGHT;
         while(scanner.hasNext()){
             makeSingleBrick(scanner.next().charAt(0));
             //Moves the x location along the row
-            xPos += (brickWidth + brickGap);
+            xPos += (BRICK_WIDTH + BRICK_GAP);
             //If next brick would go off the screen
-            if(xPos + brickWidth > gameWidth){
+            if(xPos + BRICK_WIDTH > GAME_WIDTH){
                 xPos = 0;
-                yPos += (brickHeight+brickGap);
+                yPos += (BRICK_HEIGHT + BRICK_GAP);
             }
         }
     }
@@ -101,15 +86,15 @@ public class LevelCreator {
     public void makeSingleBrick(char brickCode){
         //A regular brick. Takes between 1 and 9 hits to destroy
         if(brickCode - '0' > 0 && brickCode - '0' < 10){
-            ALL_GAME_OBJECTS.add(new MultiHitBrick(xPos, yPos, brickWidth, brickHeight, brickCode - '0'));
+            ALL_GAME_OBJECTS.add(new MultiHitBrick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT, brickCode - '0'));
         }
         //A row destroy brick. Destroys the entire row it is a part of.
         else if(brickCode - 'r' == 0){
-           ALL_GAME_OBJECTS.add(new RowDestroyBrick(xPos, yPos, brickWidth, brickHeight));
+           ALL_GAME_OBJECTS.add(new RowDestroyBrick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT));
         }
         //A power up brick. Drops a power up when destroyed
         else if(brickCode - 'p' == 0){
-            ALL_GAME_OBJECTS.add(new DropPowerUpBrick(xPos, yPos, brickWidth, brickHeight));
+            ALL_GAME_OBJECTS.add(new DropPowerUpBrick(xPos, yPos, BRICK_WIDTH, BRICK_HEIGHT));
         }
 
     }
@@ -133,12 +118,14 @@ public class LevelCreator {
     }
 
     /**
-     * Initializes the ball object
+     * Initializes the ball object. Returns a ball because we need to make more than one if the player
+     * starts the game with more than 1 life.
      */
-    public void makeBall(){
+    public Ball makeBall(){
         ball = new Ball(BALL_XINITIAL, BALL_YINITIAL, BALL_RADIUS, BALL_XVELOCITY, BALL_YVELOCITY);
         // add to all objects in play for collision detection
         ALL_GAME_OBJECTS.add(ball);
+        return ball;
     }
 
     /** Method to make the paddle and add it to our ObjectManager and GameNodes to be rendered.
