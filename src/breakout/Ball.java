@@ -5,6 +5,8 @@ import javafx.geometry.Bounds;
 
 public class Ball extends CircleGameObject{
 
+    public boolean hasPowerUp = false;
+
     /**
      * The ball class represents the ball that is used to play the breakout game. Although one ball
      * is all that is initially instantiated, it is possible to instantiate more if needed for
@@ -18,6 +20,7 @@ public class Ball extends CircleGameObject{
     public Ball(int xPos, int yPos, int radius, int xVel, int yVel){
         super(xPos, yPos, radius, xVel, yVel);
     }
+
 
     /**
      * Updates the position of the ball. Also checks for collision with the edge of the playing field
@@ -38,7 +41,10 @@ public class Ball extends CircleGameObject{
      */
     public boolean collide(GameObject other){
         if (super.collide(other)){
-            // checking to see if bouncing off left or right wall
+            if(hasPowerUp && other instanceof Brick){
+                other.isDead = true;
+            }
+            // checking to see if bouncing off left or right side of an object
             if(checkRightWallCollision(other) || checkLeftWallCollision(other)){
                     XVelocity = -XVelocity;
             }
