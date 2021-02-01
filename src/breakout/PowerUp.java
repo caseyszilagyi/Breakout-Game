@@ -5,7 +5,7 @@ import javafx.scene.paint.ImagePattern;
 import javafx.scene.shape.Circle;
 
 public class PowerUp extends RectangleGameObject{
-    ImagePattern powerUpImage = new ImagePattern(new Image(getClass().getClassLoader().getResourceAsStream("PowerUp.png")));
+
     /**
      * The powerup class is what is created whenever a power up brick is destroyed.
      * @param xPos Starting x position of the circle
@@ -13,7 +13,6 @@ public class PowerUp extends RectangleGameObject{
      */
     public PowerUp(double xPos, double yPos){
         super((int) xPos, (int) yPos, 20, 20,  0, 3);
-        gameObject.setFill(powerUpImage);
     }
 
     /**
