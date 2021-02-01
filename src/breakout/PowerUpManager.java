@@ -49,6 +49,7 @@ public class PowerUpManager {
 
     public void getRandomGoodPowerUp(){
         double randomNum = random.nextDouble();
+            makeBallDestroyBricksIn1Hit();
         if(randomNum<PADDLE_BIGGER_CHANCE){
             makePaddleBigger();
         }
