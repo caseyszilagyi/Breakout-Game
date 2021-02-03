@@ -3,6 +3,10 @@ package breakout;
 import javafx.geometry.Bounds;
 
 /**
+ * Represents the ball that is used to play the breakout game. Although one ball is all that is
+ * initially instantiated, it is possible to instantiate more if needed for a powerup. The ball is
+ * just a circular object with a velocity.
+ *
  * @author Casey Szilagyii
  */
 public class Ball extends CircleGameObject {
@@ -10,10 +14,8 @@ public class Ball extends CircleGameObject {
   public boolean hasPowerUp = false;
 
   /**
-   * Represents the ball that is used to play the breakout game. Although one ball is all that is
-   * initially instantiated, it is possible to instantiate more if needed for a powerup The super
-   * constructor makes a circle with the given parameters, and sets the velocity of the game object
-   * to the designated velocity
+   * The super constructor makes a circle with the given position and radius parameters, and sets
+   * the velocity of the game object to the designated velocity.
    *
    * @param xPos   Starting x position of the ball
    * @param yPos   Starting y position of the ball
@@ -28,7 +30,7 @@ public class Ball extends CircleGameObject {
 
   /**
    * Updates the position of the ball. This is done by using the setTranslate methods and the
-   * velocity of the ball
+   * velocity of the ball.
    */
   @Override
   public void update() {
@@ -38,7 +40,10 @@ public class Ball extends CircleGameObject {
   /**
    * The collide method calls the super method to determine whether the objects are colliding. If
    * they are, it needs to be determined what side of the other object the ball is bouncing off of
-   * in order to determine how the velocity should be changed.
+   * in order to determine how the velocity should be changed. This is done through calls to
+   * submethods, with the logic in this method determining whether the x or y velocity is reversed.
+   * If other is an instance of a powerup, we also return false because the ball should not have any
+   * collision mechanics with a power up.
    *
    * @param other - The other GameObject.
    * @return Whether or not they are colliding.

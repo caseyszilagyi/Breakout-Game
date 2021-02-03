@@ -2,12 +2,15 @@ package breakout;
 
 
 /**
+ * What is created when a power up brick is destroyed.
+ *
  * @author Casey Szilagyi
  */
 public class PowerUp extends RectangleGameObject {
 
   /**
-   * What is created whenever a power up brick is destroyed.
+   * Makes a circular object with the specified x position and y position. The diameter is 20
+   * automatically.
    *
    * @param xPos Starting x position of the powerup
    * @param yPos Starting y position of the powerup
@@ -17,7 +20,8 @@ public class PowerUp extends RectangleGameObject {
   }
 
   /**
-   * Updates the position of the powerup by changing the position based on the velocity
+   * Updates the position of the powerup by changing the position based on the velocity using the
+   * setTranslate method
    */
   @Override
   public void update() {
@@ -28,7 +32,7 @@ public class PowerUp extends RectangleGameObject {
    * Checks to see if the powerup collided with the paddle. If so, returns true.
    *
    * @param other - The other GameObject.
-   * @return True if it did
+   * @return True if it collided with the paddle.
    */
   public boolean collide(GameObject other) {
     if (other instanceof Paddle && super.collide(other)) {

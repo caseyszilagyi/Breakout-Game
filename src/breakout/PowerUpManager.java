@@ -7,6 +7,15 @@ import javafx.util.Duration;
 
 import java.util.Random;
 
+/**
+ * Has all of the methods that enact powerups, as well as times them and reverts the game back to
+ * its original state when they are done. Can set the probability of a good/bad powerup, as well as
+ * the individual probabilities of each good/bad powerup. Assumes that the probabilites add up to 1
+ * for both good and bad powerups,, or else a powerup may not have any effect on the state of the
+ * game.
+ *
+ * @author Casey Szilagyi
+ */
 public class PowerUpManager {
 
   private Paddle paddle;
@@ -15,7 +24,6 @@ public class PowerUpManager {
 
   private double normalPaddleWidth;
   private double normalBallSpeed;
-
 
   //Probabilities of various power ups
   // good
@@ -31,9 +39,11 @@ public class PowerUpManager {
   private int POWER_UP_DURATION = 10000;
 
   /**
-   * Allows power ups to alter the state of the game if activated
+   * Need the ball and paddle that the game is being played with in order to update the state of the
+   * game when a power up is gotten.
+   *
    * @param gamePaddle The paddle being used to play the game
-   * @param gameBall The ball being used to play the game
+   * @param gameBall   The ball being used to play the game
    */
   public PowerUpManager(Paddle gamePaddle, Ball gameBall) {
     paddle = gamePaddle;
@@ -44,7 +54,8 @@ public class PowerUpManager {
   }
 
   /**
-   * Deals with any powerup
+   * Deals with any powerup by getting a random good/bad powerup depending on the random number
+   *
    * @param powerUp The power up that is activated
    */
   public void dealWithPowerUp(PowerUp powerUp) {
@@ -56,7 +67,7 @@ public class PowerUpManager {
   }
 
   /**
-   * Gives the user a random good power up, based on the odds established
+   * Gives the user a random good power up, based on the odds established in the instance variables
    */
   public void getRandomGoodPowerUp() {
     double randomNum = random.nextDouble();
@@ -68,15 +79,15 @@ public class PowerUpManager {
     }
   }
 
-  /** Gives the user a random bad power up, (but there is only 1 right now
-   *
+  /**
+   * Gives the user a random bad power up, (but there is only 1 right now)
    */
   public void getRandomBadPowerUp() {
     makeBallFaster();
   }
 
-  /** Power up to make the ball move faster
-   *
+  /**
+   * Power up to make the ball move faster
    */
   public void makeBallFaster() {
     ball.YVelocity = ball.YVelocity * BALL_SPEED_UP_MULTIIPLIER;
@@ -86,7 +97,8 @@ public class PowerUpManager {
     endPowerUp.play();
   }
 
-  /** Stops the ball from moving faster after a certain period of time
+  /**
+   * Stops the ball from moving faster after a certain period of time
    *
    * @return The event handler that stops the ball from moving faster
    */
@@ -101,8 +113,8 @@ public class PowerUpManager {
     return handle;
   }
 
-  /** Makes the paddle bigger
-   *
+  /**
+   * Makes the paddle bigger
    */
   public void makePaddleBigger() {
     paddle.gameObject.setWidth(PADDLE_POWERUP_WIDTH);
@@ -111,7 +123,8 @@ public class PowerUpManager {
     endPowerUp.play();
   }
 
-  /** Makes the paddle smaller again
+  /**
+   * Makes the paddle smaller again
    *
    * @return The eventhandler that makes the paddle smaller
    */
@@ -125,8 +138,8 @@ public class PowerUpManager {
     return handle;
   }
 
-  /** Allows the ball to destroy bricks in a single hit
-   *
+  /**
+   * Allows the ball to destroy bricks in a single hit
    */
   public void makeBallDestroyBricksIn1Hit() {
     ball.hasPowerUp = true;
@@ -135,7 +148,8 @@ public class PowerUpManager {
     endPowerUp.play();
   }
 
-  /** Stops the ball from having the power up
+  /**
+   * Stops the ball from having the break bricks in 1 hit power up
    *
    * @return The event handler that takes away the power up
    */

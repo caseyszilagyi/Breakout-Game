@@ -3,6 +3,10 @@ package breakout;
 import javafx.scene.shape.Circle;
 
 /**
+ * Represents any game object that is circular. Is abstract because any specific game object should
+ * be made using a subclass as some of the properties may change. This is the most general form of a
+ * circular GameObject
+ *
  * @author Casey Szilagyi
  */
 public abstract class CircleGameObject extends GameObject {
@@ -10,7 +14,7 @@ public abstract class CircleGameObject extends GameObject {
   public Circle gameObject;
 
   /**
-   * represents any GameObject that is circular
+   * Makes a circle of the given specifications.
    *
    * @param xPos   starting x position of the circle
    * @param yPos   starting y position of the circle

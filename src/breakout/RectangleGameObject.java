@@ -3,6 +3,9 @@ package breakout;
 import javafx.scene.shape.Rectangle;
 
 /**
+ * Represents any GameObject that is a rectangle. Can't be instantiated because any rectangular game
+ * object should be specified through a subclass.
+ *
  * @author Casey Szilagyi
  */
 public abstract class RectangleGameObject extends GameObject {
@@ -10,7 +13,7 @@ public abstract class RectangleGameObject extends GameObject {
   public Rectangle gameObject;
 
   /**
-   * represents any GameObject that is rectangular
+   * Makes a rectangle with the given specifications, as well as setting the x/y velocities
    *
    * @param startX Starting x position of the rectangle
    * @param startY Starting y position of the rectangle
@@ -39,7 +42,7 @@ public abstract class RectangleGameObject extends GameObject {
    * Did this GameObject collide into the other one
    *
    * @param other - The other object.
-   * @return True if it did
+   * @return True if they collided
    */
   public boolean collide(GameObject other) {
     return super.collide(other);

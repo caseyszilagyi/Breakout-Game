@@ -6,6 +6,9 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.text.Text;
 
 /**
+ * Makes all of the different scenes that are needed for the game. These include the before level 1
+ * scene, the between levels scene, and the win/loss scenes.
+ *
  * @author Casey Szilagyi
  */
 public class LevelHandler {
@@ -27,9 +30,7 @@ public class LevelHandler {
   int currentLevel = 0;
 
   /**
-   * The level handler class makes the scenes that we see between the levels as well as before the
-   * first level. The buttons that advance to the next level have getters that allow them to have
-   * functionality in the BreakoutGame class
+   * The scenes are made based on the width and height of the game, so it takes in those parameters
    *
    * @param gWidth  Game Width
    * @param gHeight Game Height
@@ -66,7 +67,8 @@ public class LevelHandler {
   }
 
   /**
-   * Gets the game start button
+   * Gets the game start button. This is needed to trigger the change in scenes in the BreakoutGame
+   * class
    *
    * @return The button
    */
@@ -94,7 +96,8 @@ public class LevelHandler {
   }
 
   /**
-   * Gets the between levels button
+   * Gets the between levels button. This is needed to trigger the change in scenes in the *
+   * BreakoutGame class
    *
    * @return The button
    */

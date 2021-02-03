@@ -4,6 +4,7 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
 /**
+ * This brick destroys the entire row it is a part of when it is destroyed.
  * @author Casey Szilagy
  */
 public class RowDestroyBrick extends Brick {
@@ -12,7 +13,7 @@ public class RowDestroyBrick extends Brick {
       new Image(getClass().getClassLoader().getResourceAsStream("RowDestroyBrick.png")));
 
   /**
-   * The row destroy brick destroys the entire row it is a part of when destroyed.
+   * Makes the brick at the specified location with the given width/height.
    *
    * @param startX Starting x position of the brick
    * @param startY Starting y position of the brick
@@ -25,7 +26,8 @@ public class RowDestroyBrick extends Brick {
   }
 
   /**
-   * Only returns true if the ball collided with this brick
+   * Only returns true if the ball collided with this brick, because the brick doesn't need
+   * to detect any other type of collisions.
    *
    * @param other - The other object.
    * @return Whether or not they collided

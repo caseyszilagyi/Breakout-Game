@@ -4,6 +4,9 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
 /**
+ * This type brick drops a powerup whenever it is destroyed. It has 1 health and the chances of a
+ * good/bad power up being dropped are specified in the PowerUpManager class
+ *
  * @author Casey Szilagyii
  */
 public class DropPowerUpBrick extends Brick {
@@ -12,7 +15,8 @@ public class DropPowerUpBrick extends Brick {
       new Image(getClass().getClassLoader().getResourceAsStream("PowerUpBrick.png")));
 
   /**
-   * this type brick drops a powerup whenever it is destroyed.
+   * Makes a brick of the given position and width/height. Also sets the fill to the provided image
+   * above
    *
    * @param startX Starting x position of the brick
    * @param startY Starting y position of the brick
@@ -25,7 +29,8 @@ public class DropPowerUpBrick extends Brick {
   }
 
   /**
-   * only returns true if the ball collided with this brick
+   * only returns true if the ball collided with this brick. This type of brick doesn't need to
+   * detect any other types of collisions.
    *
    * @param other - The other object.
    * @return Whether or not they collided

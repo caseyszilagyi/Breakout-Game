@@ -3,8 +3,8 @@ package breakout;
 import java.util.*;
 
 /**
- * Object manager holds all the objects in the game for collision detection and removes/adds new
- * objects
+ * Object manager holds all the objects in the game in order to help with collision detection and
+ * determine what objects need to be removed.
  *
  * @author Casey Szilagyi
  */
@@ -16,7 +16,7 @@ public class ObjectManager {
   private final static Set REMOVE_OBJECTS = new HashSet<GameObject>();
 
   /**
-   * Gets all of our objects
+   * Gets all of the objects
    *
    * @return A list of the objects
    */
@@ -25,7 +25,7 @@ public class ObjectManager {
   }
 
   /**
-   * Adds objects into our list of object
+   * Adds objects into the list of object
    *
    * @param objects The objects that will be added
    */
@@ -34,7 +34,7 @@ public class ObjectManager {
   }
 
   /**
-   * Objects to remove from our list of objects
+   * Objects to remove from the list of objects
    *
    * @param objects The objects to remove
    */

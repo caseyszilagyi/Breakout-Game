@@ -1,13 +1,16 @@
 package breakout;
 
 /**
+ * The brick class is how all of the bricks in the game are made. The class is abstract so that any
+ * specific type of brick must be made through the use of a subclass. If a single hit brick is
+ * needed, a multihitbrick with a health of 1 can be created.
+ *
  * @author Casey Szilagyi
  */
 public abstract class Brick extends RectangleGameObject {
 
   /**
-   * The brick class is how all of the bricks in the game are made. The class is abstract so that
-   * any specific type of brick must be made through the use of a subclass
+   * Makes a rectangle of the given position, width/height, and velocity
    *
    * @param startX starting x position of the brick
    * @param startY starting y position of the brick
@@ -21,7 +24,8 @@ public abstract class Brick extends RectangleGameObject {
   }
 
   /**
-   * changes the positioning of the brick if it is a moving one
+   * changes the positioning of the brick if it is a moving one using the velocity and setTranslate
+   * method
    */
   public void update() {
     super.update();

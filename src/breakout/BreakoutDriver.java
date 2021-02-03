@@ -4,7 +4,8 @@ import javafx.application.Application;
 import javafx.stage.Stage;
 
 /**
- * The main driver of the game.
+ * The main driver of the game. This class just instantiates an instance of BreakoutGame, and makes
+ * the necessary calls to it in order to make the game and star the game loop.
  *
  * @author Casey Szilagyi
  */
@@ -13,6 +14,8 @@ public class BreakoutDriver extends Application {
   private BreakoutGame breakoutGame = new BreakoutGame(60, "My Breakout Game");
 
   /**
+   * Launches our JavaFX window
+   *
    * @param args the command line arguments
    */
   public static void main(String[] args) {

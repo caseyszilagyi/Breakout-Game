@@ -15,6 +15,16 @@ import javafx.stage.Stage;
 import javafx.scene.shape.Rectangle;
 import java.util.ArrayList;
 
+/**
+ * The BreakoutGame class is the main class that incorporates all the aspects of other classes in
+ * order to run a functioning breakout game. All of the instance variables are the core variables
+ * and parts needed for the game to function, as well as instances of other classes that we make
+ * method calls to. The core of the game loop is in the game class, but this class overrides a few
+ * of the methods and also has other methods that deal with the status of the game such as the lives
+ * and level. Additionally, event handlers are built to deal with key input
+ *
+ * @author Casey Szilagyi
+ */
 public class BreakoutGame extends Game {
 
   // game size and positioning of score/lives text
@@ -56,8 +66,8 @@ public class BreakoutGame extends Game {
   private Stage gameDisplay;
 
   /**
-   * This constructor calls the super constructor in the "Game" class. It makes the game loop with
-   * the given fps and window title
+   * This constructor calls the super constructor in the "Game" class. It creates the game loop with
+   * the given frames per second and window title
    *
    * @param fps   The frames per second that the game will run at
    * @param title The name of the game
@@ -70,7 +80,8 @@ public class BreakoutGame extends Game {
    * Initializes the game world by updating the primaryStage. This method sets the size of the game,
    * and initializes all of the objects to play the game through the call to makeGameComponents. It
    * also makes all of the other scenes to switch between by the call to makeOtherDisplayScenes, and
-   * makes the buttons of these other scenes work.
+   * makes the buttons of these other scenes work so that the game can be played properly by
+   * advancing from one level to the next
    *
    * @param primaryStage The stage constructed by the platform to be updated
    */
@@ -88,7 +99,10 @@ public class BreakoutGame extends Game {
   }
 
   /**
-   * Makes all of the display scenes and sets them to the instance variables.
+   * Makes all of the display scenes and sets them to the instance variables. This is so that at the
+   * end of each level, there is a screen to display that allows the user to wait before beginning
+   * the next level. This also includes the splash screen before the game, which is different from
+   * the between levels scene
    */
   public void makeOtherDisplayScenes() {
     levelHandler = new LevelHandler(GAME_WIDTH, GAME_HEIGHT);
@@ -101,7 +115,8 @@ public class BreakoutGame extends Game {
 
   /**
    * Checks to see if a level is done, if the user is out of lives, or if the ball is in play. Also
-   * updates our game message
+   * updates our game message. If the user is out of lives, display the lost message. If the user
+   * has completed a level, we either move to the nexts or the user has won.
    */
   @Override
   public void updateGameValues() {
@@ -131,7 +146,8 @@ public class BreakoutGame extends Game {
   }
 
   /**
-   * checks if a level is done being played by seeing if there are any bricks remaining
+   * checks if a level is done being played by seeing if there are any bricks remaining in the group
+   * of all GameObjects
    *
    * @return True if no bricks
    */
@@ -145,8 +161,9 @@ public class BreakoutGame extends Game {
   }
 
   /**
-   * Updating the game object. The super method simply calls the update method in the class of the
-   * GameObject itself, which results in updating the position with the velocity.
+   * Updating a game object. The super method simply calls the update method in the class of the
+   * GameObject itself, which results in updating the position with the velocity. This is called for
+   * all GameObjects that are present in the game.
    *
    * @param gameObject
    */
@@ -157,10 +174,9 @@ public class BreakoutGame extends Game {
 
   /**
    * Deals with the collision of two GameObjects. Leads to the calling of the collision method of
-   * GameObject A, and also checks conditionals for management of the game Bouncing off of
-   * bricks/borders is done within the respective classes. This collide method is only for details
-   * that need to be updated within the BreakoutGame class, all the other necessary collisions such
-   * as ball bouncing are handled in the classes of the GameObjects
+   * GameObject A, in which actions can be taken depending on the collision. There are conditionals
+   * in this collide method to update details that are specific the state of the game. All the other
+   * necessary collisions such as ball bouncing are handled in the classes of the GameObjects
    *
    * @param A - called from super.checkCollision() method while looping through all GameObjects.
    * @param B - called from super.checkCollision() while looping through all GameObjects.
@@ -185,7 +201,11 @@ public class BreakoutGame extends Game {
   }
 
   /**
-   * Checks whether the ball collided with a brick in order to update the score
+   * Checks whether the ball collided with a brick in order to update the score. Different bricks
+   * result in different numbers of points.
+   *
+   * @param A The brick GameObject
+   * @param B The ball GameObject
    */
   public void updateScore(GameObject A, GameObject B) {
     if (A instanceof Brick) {
@@ -208,6 +228,9 @@ public class BreakoutGame extends Game {
 
   /**
    * Changes the speed and direction of the ball based on what part of the paddle it hits
+   *
+   * @param A The Ball/Paddle
+   * @param B The Ball/Paddle
    */
   public void updateBallVelocityBasedOnPaddleBounce(GameObject A, GameObject B) {
     if (A instanceof Paddle || B instanceof Paddle) {
@@ -223,6 +246,8 @@ public class BreakoutGame extends Game {
   /**
    * Destroys the row specified by the Y position of the RowDestroyBrick by looping through all
    * GameObjects and seeing if they have the same Y position
+   *
+   * @param yPos The y value of the row that will be destroyed.
    */
   public void destroyRow(double yPos) {
     for (Object singleObject : getObjectManager().getObjects()) {
@@ -234,6 +259,9 @@ public class BreakoutGame extends Game {
 
   /**
    * Makes a power up that falls in the location of the destroyed brick
+   *
+   * @param xPos The x position of the power up that is being made
+   * @param yPos The y position of the power up that is being made
    */
   public void dropPowerUp(double xPos, double yPos) {
     PowerUp powerUp;
@@ -250,7 +278,7 @@ public class BreakoutGame extends Game {
   }
 
   /**
-   * checks whether the ball is still in play
+   * checks whether the ball is still in play. If not, we take away a life.
    */
   public void checkIfBallIsInPlay() {
     if (currentLevel > 0 && ball.node.getTranslateY() + ball.node.getLayoutY() > GAME_HEIGHT) {
@@ -392,7 +420,7 @@ public class BreakoutGame extends Game {
 
   /**
    * Updates the boolean values that determine if the left/right key is currently being pressed, as
-   * well as implementing all of the cheat codes
+   * well as implementing all of the cheat codes. This is called as the key pressed event handler
    *
    * @param event The key that is pressed
    */
@@ -430,7 +458,8 @@ public class BreakoutGame extends Game {
   }
 
   /**
-   * Updates the boolean values that determine if the left/right key is currently being released
+   * Updates the boolean values that determine if the left/right key is currently being released.
+   * This is called as part of the key released handler.
    *
    * @param event The key that is released
    */

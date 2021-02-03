@@ -4,6 +4,8 @@ import javafx.scene.image.Image;
 import javafx.scene.paint.ImagePattern;
 
 /**
+ * The brick that can take anywhere from 1-9 hits to destroy.
+ *
  * @author Casey Szilagyi
  */
 public class MultiHitBrick extends Brick {
@@ -31,7 +33,9 @@ public class MultiHitBrick extends Brick {
       new Image(getClass().getClassLoader().getResourceAsStream("9HealthBrick.png")));
 
   /**
-   * This is the most simple brick. It takes anywhere from 1 to 9 hits to destroy
+   * The constructor makes a rectangle of the given specifications, as well as designating the
+   * health of the brick. Also calls the updateColor method, which changes the design of the brick
+   * based on the health
    *
    * @param startX     Starting x position of the brick
    * @param startY     Starting y position of the brick
@@ -54,7 +58,7 @@ public class MultiHitBrick extends Brick {
   }
 
   /**
-   * Updates the color of the brick
+   * Updates the design of the brick based on the brick health.
    */
   public void updateColor() {
     switch (health) {
@@ -89,12 +93,11 @@ public class MultiHitBrick extends Brick {
   }
 
   /**
-   * Did this GameObject collide into another one. The collide method for this class only checks for
-   * collision with the ball It updates the health if it did, and makes the object dead if the
-   * health is 0
+   * The collide method for this class only checks for collision with the ball It updates the health
+   * if it does collide, and makes the object dead if the health is 0
    *
    * @param other - The other object.
-   * @return True if it did
+   * @return True if it collides and the other object is a ball.
    */
   public boolean collide(GameObject other) {
     // Only update health if collides with ball

@@ -9,6 +9,10 @@ import javafx.scene.Group;
 import javafx.stage.Stage;
 
 /**
+ * The game class sets up a generic game loop that can be used to make a game. The game loop
+ * consists of updating game values, checking collisions, and updating locations of objects. An
+ * ObjectManager is also created to deal with all of the objects that are a part of the game.
+ *
  * @author Casey Szilagyi
  */
 public abstract class Game {
@@ -67,12 +71,13 @@ public abstract class Game {
   }
 
   /**
-   * Initializes the game
+   * Initializes the game. This is abstract because any details about initialization of the game
+   * should be made in the class of that game, not in the generic game class.
    */
   public abstract void start(final Stage primaryStage);
 
   /**
-   * Starts the timeline
+   * Starts the gameloop timeline
    */
   public void beginGameLoop() {
     gameLoop.play();
@@ -97,7 +102,9 @@ public abstract class Game {
   }
 
   /**
-   * Checks if any 2 objects collide. If they do, we stop checking for the current item
+   * Checks if any 2 objects collide. If they do, we stop checking for more collisions for the
+   * current item. This assumes that we don't want any item to have more than 1 collision happening
+   * at the time, which may not be the case but will make the code run faster.
    */
   public void checkCollisions() {
     //Reset our list of collisions to check
@@ -114,14 +121,19 @@ public abstract class Game {
   }
 
   /**
-   * Calls the collide method contained in the GameObject class
+   * Calls the collide method contained in the class of GameObject A, which checks to see if the
+   * items are colliding
+   *
+   * @param A The GameObject, the collide method from this object is called
+   * @param B The other GameObject.
+   * @return
    */
   public boolean collide(GameObject A, GameObject B) {
     return A.collide(B);
   }
 
   /**
-   * Calls the cleanup method in ObjectManager, which removes objects that are no longer needed
+   * Calls the cleanup method in ObjectManager, which removes objects that are considered dead
    */
   public void cleanupDeadObjects() {
     // Checks for dead objects using the object manager
@@ -152,6 +164,8 @@ public abstract class Game {
 
   /**
    * Gets the Window title
+   *
+   * @return The window title
    */
   public String getWindowTitle() {
     return WINDOW_TITLE;
@@ -159,6 +173,8 @@ public abstract class Game {
 
   /**
    * Gets the frames per second
+   *
+   * @return the frames per second
    */
   public int getFPS() {
     return FRAMES_PER_SECOND;
@@ -166,6 +182,8 @@ public abstract class Game {
 
   /**
    * Gets the object manager, which deals with collisions and object cleanup
+   *
+   * @return the object manager
    */
   public ObjectManager getObjectManager() {
     return objectManager;
@@ -180,6 +198,8 @@ public abstract class Game {
 
   /**
    * Gets the scene that is used to play the game on
+   *
+   * @return the scene
    */
   public Scene getGameSurface() {
     return gameSurface;
@@ -194,6 +214,8 @@ public abstract class Game {
 
   /**
    * Gets the collection of nodes used to render the game
+   *
+   * @return The group of nodes
    */
   public Group getNodes() {
     return allNodes;
@@ -209,6 +231,8 @@ public abstract class Game {
 
   /**
    * Gets the game loop that is currently being used to play the game
+   *
+   * @return the game loop
    */
   public Timeline getGameLoop() {
     return gameLoop;

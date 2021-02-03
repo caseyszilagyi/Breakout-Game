@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 /**
+ * Used to make all of the gameobjects needed to play a level. All of the specifications of the
+ * gameObjects are contained iin the instance variables.
+ *
  * @author Casey Szilagyi
  */
 public class LevelCreator {
@@ -44,7 +47,8 @@ public class LevelCreator {
   private int yPos;
 
   /**
-   * The LevelCreator class has all the methods to make a level
+   * The LevelCreator class has all the methods to make a level. However, the constructor doesn't
+   * need to do anything.
    */
   public LevelCreator() {
   }
@@ -84,9 +88,11 @@ public class LevelCreator {
   }
 
   /**
-   * makes a single brick in our game
+   * makes a single brick in our game. Increments the positioning of the next brick if a letter or
+   * number is read in, but not if a newline character is read in
    *
-   * @param brickCode The character read in from the text file indicating the type of brick to make
+   * @param brickCode The character read in from the text file indicating the type of brick to
+   *                  make.
    */
   public void makeSingleBrick(char brickCode) {
     //A regular brick. Takes between 1 and 9 hits to destroy
@@ -119,7 +125,7 @@ public class LevelCreator {
 
   /**
    * Makes the game border so that collision with the edge is easier. The border is just a
-   * GameObject so that the game engine can deal with these collisions as they do every other
+   * GameObject so that the game engine can deal with these collisions as is does every other
    * collision.
    */
   public void makeGameBorder() {
@@ -136,7 +142,7 @@ public class LevelCreator {
   }
 
   /**
-   * Initializes the ball object. Returns a ball so more can be made in the BreakoutGame calss
+   * Initializes the ball object. Returns a ball so more can be made in the BreakoutGame class
    * because we need to make more than one if the player starts the game with more than 1 life.
    *
    * @return the ball
@@ -149,7 +155,7 @@ public class LevelCreator {
   }
 
   /**
-   * makes the game paddle, and also returns it incase a new paddle needs to be made if the user
+   * makes the game paddle, and also returns it in case a new paddle needs to be made if the user
    * uses a cheat code
    *
    * @return the paddle
@@ -164,6 +170,8 @@ public class LevelCreator {
 
   /**
    * Gets all of the game components
+   *
+   * @return all of the game components in an ArrayList
    */
   public ArrayList getGameComponents() {
     return ALL_GAME_OBJECTS;
