@@ -49,7 +49,11 @@ into the ideas of updating the game properties, updating object positions, and c
   functionality needed to be created, it would need to be done in relation to one of those
   things, or the game loop would need to be changed.
   
-- 
+- Assumes that anything that will need to be graphically displayed in the game will be of the
+type GameObject
+  
+- Assumes that all levels will be made with the same brick size/paddle size/ball speed once
+the variables are chosen.
 
 
 ##How to Add New Features##
